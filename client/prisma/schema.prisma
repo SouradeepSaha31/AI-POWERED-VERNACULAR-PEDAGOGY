@@ -1,0 +1,66 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  role      String   @default("teacher")
+  createdAt DateTime @default(now())
+}
+
+model Language {
+  id     String @id @default(cuid())
+  code   String @unique
+  name   String
+  status String @default("coming_soon") // active, prototype, coming_soon
+}
+
+model CurriculumLesson {
+  id                String   @id @default(cuid())
+  grade             Int
+  subject           String
+  topic             String
+  title             String
+  learningObjective String
+  content           String   // JSON string containing script, activity, assessment
+  language          String   @default("hi")
+  
+  worksheets        Worksheet[]
+}
+
+model Translation {
+  id             String   @id @default(cuid())
+  sourceText     String
+  sourceLanguage String
+  targetLanguage String
+  translatedText String
+  createdAt      DateTime @default(now())
+}
+
+model Worksheet {
+  id        String   @id @default(cuid())
+  lessonId  String
+  lesson    CurriculumLesson @relation(fields: [lessonId], references: [id])
+  language  String
+  content   String   // JSON string of generated worksheet content
+  createdAt DateTime @default(now())
+}
+
+model Flashcard {
+  id        String @id @default(cuid())
+  topic     String
+  language  String
+  frontText String
+  backText  String
+  imageUrl  String?
+  audioUrl  String?
+}
