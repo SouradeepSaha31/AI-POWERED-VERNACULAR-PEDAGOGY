@@ -1,12 +1,20 @@
 from fastapi import FastAPI
+from pydantic import BaseModel
+from translation.translator import translate_text
 
 app = FastAPI()
 
 
-@app.get("/")
-def home():
+class TranslationRequest(BaseModel):
+    text: str
+    source_language: str = "hi"
+    target_language: str = "sat"
+
+@app.get("/health")
+def health():
     return {
-        "message": "AI Model is running"
+        "status": "ok",
+        "model": "nllb-200"
     }
 
 
@@ -15,4 +23,22 @@ def health():
     return {
         "status": "ok",
         "model": "vernacular-ai"
+    }
+
+@app.post("/translate")
+def translate(request: TranslationRequest):
+
+    translated_text = translate_text(
+        request.text,
+        request.source_language,
+        request.target_language
+    )
+
+    return {
+        "success": True,
+        "source_text": request.text,
+        "translated_text": translated_text,
+        "source_language": request.source_language,
+        "target_language": request.target_language,
+        "confidence": 0.85
     }

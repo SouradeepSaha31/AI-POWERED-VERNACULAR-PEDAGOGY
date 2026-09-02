@@ -9,7 +9,31 @@ import FlashcardsPage from "./pages/dashboard/FlashcardsPage.jsx";
 import CurriculumPage from "./pages/dashboard/CurriculumPage.jsx";
 import OfflinePage from "./pages/dashboard/OfflinePage.jsx";
 
+
+import { useEffect } from "react";
+import { testBackend } from "./lib/api";
+
+// function App() {
+
+  
+
+//   // existing code...
+// }
+
+
 export default function App() {
+
+  useEffect(() => {
+    testBackend()
+      .then((data) => {
+        console.log("Backend Connected:", data);
+      })
+      .catch((error) => {
+        console.error("Backend Connection Failed:", error);
+      });
+  }, []);
+
+
   return (
     <Routes>
       <Route path="/" element={<LandingPage />} />
