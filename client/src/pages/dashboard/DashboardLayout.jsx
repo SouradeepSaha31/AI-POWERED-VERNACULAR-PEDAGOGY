@@ -1,4 +1,4 @@
-import { Link, Outlet } from "react-router-dom";
+import { NavLink, Link, Outlet } from "react-router-dom";
 import {
   BookOpen,
   Languages,
@@ -25,49 +25,49 @@ export default function DashboardLayout() {
         <nav className="flex-1 overflow-y-auto py-4">
           <ul className="space-y-1 px-3">
             <li>
-              <Link to="/dashboard" className="flex items-center gap-3 px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100 font-medium">
+              <NavLink to="/dashboard" className={({isActive}) => `flex items-center gap-3 px-3 py-2 rounded-md text-slate-700 hover:bg-blue-200 font-medium ${isActive ? "bg-blue-200" : ""}`}>
                 <LayoutDashboard className="w-5 h-5 text-slate-500" />
                 Dashboard
-              </Link>
+              </NavLink>
             </li>
             <li>
-              <Link to="/dashboard/translate" className="flex items-center gap-3 px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100 font-medium">
+              <NavLink to="/dashboard/translate" className={({isActive}) => `flex items-center gap-3 px-3 py-2 rounded-md text-slate-700 hover:bg-blue-200 font-medium ${isActive ? "bg-blue-200" : ""}`}>
                 <Languages className="w-5 h-5 text-slate-500" />
                 Lesson Translator
-              </Link>
+              </NavLink>
             </li>
             <li>
-              <Link to="/dashboard/voice" className="flex items-center gap-3 px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100 font-medium">
+              <NavLink to="/dashboard/voice" className={({isActive}) => `flex items-center gap-3 px-3 py-2 rounded-md text-slate-700 hover:bg-blue-200 font-medium ${isActive ? "bg-blue-200" : ""}`}>
                 <span className="w-5 h-5 flex items-center justify-center bg-emerald-100 text-emerald-600 rounded-full shrink-0">🎤</span>
                 Voice Translator
-              </Link>
+              </NavLink>
             </li>
             <li>
-              <Link to="/dashboard/worksheets" className="flex items-center gap-3 px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100 font-medium">
+              <NavLink to="/dashboard/worksheets" className={({isActive}) => `flex items-center gap-3 px-3 py-2 rounded-md text-slate-700 hover:bg-blue-200 font-medium ${isActive ? "bg-blue-200" : ""}`}>
                 <FileText className="w-5 h-5 text-slate-500" />
                 Worksheets
-              </Link>
+              </NavLink>
             </li>
             <li>
-              <Link to="/dashboard/flashcards" className="flex items-center gap-3 px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100 font-medium">
+              <NavLink to="/dashboard/flashcards" className={({isActive}) => `flex items-center gap-3 px-3 py-2 rounded-md text-slate-700 hover:bg-blue-200 font-medium ${isActive ? "bg-blue-200" : ""}`}>
                 <ImageIcon className="w-5 h-5 text-slate-500" />
                 Flashcards
-              </Link>
+              </NavLink>
             </li>
             <li className="pt-4 pb-2">
               <div className="px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider">Library</div>
             </li>
             <li>
-              <Link to="/dashboard/curriculum" className="flex items-center gap-3 px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100 font-medium">
+              <NavLink to="/dashboard/curriculum" className={({isActive}) => `flex items-center gap-3 px-3 py-2 rounded-md text-slate-700 hover:bg-blue-200 font-medium ${isActive ? "bg-blue-200" : ""}`}>
                 <BookOpen className="w-5 h-5 text-slate-500" />
                 Curriculum
-              </Link>
+              </NavLink>
             </li>
             <li>
-              <Link to="/dashboard/offline" className="flex items-center gap-3 px-3 py-2 rounded-md text-slate-700 hover:bg-slate-100 font-medium">
+              <NavLink to="/dashboard/offline" className={({isActive}) => `flex items-center gap-3 px-3 py-2 rounded-md text-slate-700 hover:bg-blue-200 font-medium ${isActive ? "bg-blue-200" : ""}`}>
                 <WifiOff className="w-5 h-5 text-slate-500" />
                 Offline Readiness
-              </Link>
+              </NavLink>
             </li>
           </ul>
         </nav>

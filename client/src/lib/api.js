@@ -24,28 +24,28 @@ async function getCurriculum(id) {
   }
 }
 
-async function postTranslate({
-  lessonId,
-  sourceLanguage,
-  targetLanguage,
-}) {
-  try {
-    const response = await API.post("/translate", {
-      lessonId,
-      sourceLanguage,
-      targetLanguage,
-    });
+// async function postTranslate({
+//   lessonId,
+//   sourceLanguage,
+//   targetLanguage,
+// }) {
+//   try {
+//     const response = await API.post("/translate", {
+//       lessonId,
+//       sourceLanguage,
+//       targetLanguage,
+//     });
 
-    return response.data;
-  } catch (error) {
-    console.error("Translation API Error:", error);
+//     return response.data;
+//   } catch (error) {
+//     console.error("Translation API Error:", error);
 
-    return {
-      success: false,
-      error: "Translation server unavailable",
-    };
-  }
-}
+//     return {
+//       success: false,
+//       error: "Translation server unavailable",
+//     };
+//   }
+// }
 
 async function postWorksheet({
   lessonId,
@@ -153,7 +153,7 @@ async function testBackend() {
 
 export {
   getCurriculum,
-  postTranslate,
+  // postTranslate,
   postWorksheet,
   postFlashcards,
   postVoiceTranslate,

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export async function translateText(req, res) {
+export async function   translateText(req, res) {
 
     try {
 
