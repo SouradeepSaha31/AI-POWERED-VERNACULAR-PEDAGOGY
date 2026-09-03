@@ -23,15 +23,15 @@ import { testBackend } from "./lib/api";
 
 export default function App() {
 
-  useEffect(() => {
-    testBackend()
-      .then((data) => {
-        console.log("Backend Connected:", data);
-      })
-      .catch((error) => {
-        console.error("Backend Connection Failed:", error);
-      });
-  }, []);
+  // useEffect(() => {
+  //   testBackend()
+  //     .then((data) => {
+  //       console.log("Backend Connected:", data);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Backend Connection Failed:", error);
+  //     });
+  // }, []);
 
 
   return (

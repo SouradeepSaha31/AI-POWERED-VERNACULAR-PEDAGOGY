@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 
 import aiRoutes from "./routes/aiRoutes.js";
+import translationRoutes from "./routes/translationRoutes.js";
 
 dotenv.config();
 
@@ -12,6 +13,8 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/ai", aiRoutes);
+app.use("/api/translate", translationRoutes);
+
 
 app.get("/", (req, res) => {
     res.json({

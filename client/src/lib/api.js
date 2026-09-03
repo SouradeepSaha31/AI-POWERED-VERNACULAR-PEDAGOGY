@@ -7,7 +7,7 @@ const API = axios.create({
   },
 });
 
-export async function getCurriculum(id) {
+async function getCurriculum(id) {
   try {
     const response = await API.get(
       id ? `/curriculum/${id}` : "/curriculum"
@@ -24,7 +24,7 @@ export async function getCurriculum(id) {
   }
 }
 
-export async function postTranslate({
+async function postTranslate({
   lessonId,
   sourceLanguage,
   targetLanguage,
@@ -47,7 +47,7 @@ export async function postTranslate({
   }
 }
 
-export async function postWorksheet({
+async function postWorksheet({
   lessonId,
   targetLanguage,
   difficulty,
@@ -72,7 +72,7 @@ export async function postWorksheet({
   }
 }
 
-export async function postFlashcards({
+async function postFlashcards({
   topic,
   targetLanguage,
   count,
@@ -95,7 +95,7 @@ export async function postFlashcards({
   }
 }
 
-export async function postVoiceTranslate({
+async function postVoiceTranslate({
   text,
   sourceLanguage,
   targetLanguage,
@@ -119,7 +119,44 @@ export async function postVoiceTranslate({
 }
 
 
-export async function testBackend() {
+async function translateText({
+    text,
+    sourceLanguage = "hi",
+    targetLanguage = "sat"
+}) {
+
+    try {
+
+        const response = await API.post("/translate", {
+            text,
+            sourceLanguage,
+            targetLanguage
+        });
+
+        return response.data;
+
+    } catch (error) {
+
+        console.error("Translation Error:", error);
+
+        return {
+            success: false,
+            error: "Translation server unavailable"
+        };
+    }
+}
+
+async function testBackend() {
   const response = await API.get("/ai/health");
   return response.data;
+}
+
+export {
+  getCurriculum,
+  postTranslate,
+  postWorksheet,
+  postFlashcards,
+  postVoiceTranslate,
+  translateText,
+  testBackend,
 }

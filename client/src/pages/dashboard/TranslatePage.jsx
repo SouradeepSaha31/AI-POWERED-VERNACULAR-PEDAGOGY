@@ -29,15 +29,22 @@ export default function TranslatePage() {
     setLoading(true);
     setTranslation(null);
     try {
-      const data = await postTranslate({
-        lessonId: selectedLesson,
+      // const data = await postTranslate({
+      //   lessonId: selectedLesson,
+      //   sourceLanguage: "hi",
+      //   targetLanguage: targetLang,
+      // });
+      const result = await translateText({
+        text: "बच्चों को गिनती सिखाएं",
         sourceLanguage: "hi",
-        targetLanguage: targetLang,
+        targetLanguage: "sat"
       });
-      if (data.success) {
-        setTranslation(data.data);
-        setLatency(data.metadata.latencyMs);
-      }
+
+      console.log(result, "hello");
+      // if (data.success) {
+      //   setTranslation(data.data);
+      //   setLatency(data.metadata.latencyMs);
+      // }
     } catch (e) {}
     setLoading(false);
   };

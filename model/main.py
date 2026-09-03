@@ -10,6 +10,13 @@ class TranslationRequest(BaseModel):
     source_language: str = "hi"
     target_language: str = "sat"
 
+@app.get("/")
+def home():
+    return {
+        "message": "AI Model is running"
+    }
+
+
 @app.get("/health")
 def health():
     return {
@@ -18,12 +25,6 @@ def health():
     }
 
 
-@app.get("/health")
-def health():
-    return {
-        "status": "ok",
-        "model": "vernacular-ai"
-    }
 
 @app.post("/translate")
 def translate(request: TranslationRequest):
