@@ -7,7 +7,7 @@ const API = axios.create({
   },
 });
 
-async function getCurriculum(id) {
+export async function getCurriculum(id) {
   try {
     const response = await API.get(
       id ? `/curriculum/${id}` : "/curriculum"
@@ -24,7 +24,7 @@ async function getCurriculum(id) {
   }
 }
 
-// async function postTranslate({
+// export async function postTranslate({
 //   lessonId,
 //   sourceLanguage,
 //   targetLanguage,
@@ -47,7 +47,7 @@ async function getCurriculum(id) {
 //   }
 // }
 
-async function postWorksheet({
+export async function postWorksheet({
   lessonId,
   targetLanguage,
   difficulty,
@@ -72,7 +72,7 @@ async function postWorksheet({
   }
 }
 
-async function postFlashcards({
+export async function postFlashcards({
   topic,
   targetLanguage,
   count,
@@ -95,7 +95,7 @@ async function postFlashcards({
   }
 }
 
-async function postVoiceTranslate({
+export async function postVoiceTranslate({
   text,
   sourceLanguage,
   targetLanguage,
@@ -119,7 +119,7 @@ async function postVoiceTranslate({
 }
 
 
-async function translateText({
+export async function translateText({
     text,
     sourceLanguage = "hi",
     targetLanguage = "sat"
@@ -146,17 +146,35 @@ async function translateText({
     }
 }
 
-async function testBackend() {
+export async function voiceTranslate(audioFile) {
+  try {
+    const formData = new FormData();
+
+    formData.append("file", audioFile);
+
+    const response = await API.post("/voice", formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+
+    return response.data;
+
+  } catch (error) {
+
+    console.error("Voice Translation Error:", error);
+
+    return {
+      success: false,
+      error: "Voice translation server unavailable",
+    };
+  }
+}
+
+export async function testBackend() {
   const response = await API.get("/ai/health");
   return response.data;
 }
 
-export {
-  getCurriculum,
-  // postTranslate,
-  postWorksheet,
-  postFlashcards,
-  postVoiceTranslate,
-  translateText,
-  testBackend,
-}

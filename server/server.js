@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 
 import aiRoutes from "./routes/aiRoutes.js";
 import translationRoutes from "./routes/translationRoutes.js";
+import voiceRoutes from "./routes/voiceRoutes.js";
 
 dotenv.config();
 
@@ -14,6 +15,7 @@ app.use(express.json());
 
 app.use("/api/ai", aiRoutes);
 app.use("/api/translate", translationRoutes);
+app.use("/api/voice", voiceRoutes);
 
 
 app.get("/", (req, res) => {
