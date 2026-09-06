@@ -9,6 +9,9 @@ from translation.translator import translate_text
 from speech.stt import speech_to_text
 from speech.tts import text_to_speech
 from utils.transliteration import roman_hindi_to_devanagari
+from curriculum.curriculum_service import translate_curriculum
+from worksheet.worksheet_generator import generate_worksheet
+from flashcards.flashcard_generator import generate_flashcards
 
 app = FastAPI()
 
@@ -205,3 +208,78 @@ async def voice_to_voice(
 
         if os.path.exists(input_path):
             os.remove(input_path)
+
+
+class CurriculumRequest(BaseModel):
+    lesson: dict
+    source_language: str = "hi"
+    target_language: str = "sat"
+
+
+@app.post("/translate-curriculum")
+def translate_curriculum_api(
+    request: CurriculumRequest
+):
+    translated = translate_curriculum(
+        request.lesson,
+        request.source_language,
+        request.target_language
+    )
+
+    return {
+        "success": True,
+        "data": translated
+    }
+
+
+
+class WorksheetRequest(BaseModel):
+    lesson: dict
+    target_language: str = "sat"
+    difficulty: str = "Easy"
+    num_questions: int = 5
+
+
+@app.post("/generate-worksheet")
+def generate_worksheet_api(
+    request: WorksheetRequest
+):
+
+    worksheet = generate_worksheet(
+        request.lesson,
+        request.target_language,
+        request.difficulty,
+        request.num_questions
+    )
+
+    return {
+        "success": True,
+        "data": worksheet
+    }
+
+
+
+class FlashcardRequest(BaseModel):
+    topic: str
+    target_language: str = "sat"
+    count: int = 6
+
+
+@app.post("/generate-flashcards")
+def generate_flashcards_api(
+    request: FlashcardRequest
+):
+
+    cards = generate_flashcards(
+        request.topic,
+        request.target_language,
+        request.count
+    )
+
+    return {
+        "success": True,
+        "data": cards
+    }
+
+
+

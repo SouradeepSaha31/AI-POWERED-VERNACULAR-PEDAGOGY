@@ -55,45 +55,55 @@ export async function postFlashcards({
   count,
 }) {
   try {
-    const response = await API.post("/flashcards", {
-      topic,
-      targetLanguage,
-      count,
-    });
+    const response = await API.post(
+      "/flashcards",
+      {
+        topic,
+        targetLanguage,
+        count,
+      }
+    );
 
     return response.data;
+
   } catch (error) {
-    console.error("Flashcard API Error:", error);
+
+    console.error(
+      "Flashcard API Error:",
+      error
+    );
 
     return {
       success: false,
-      error: "Flashcard server unavailable",
+      error:
+        error.response?.data?.error ||
+        "Flashcard server unavailable",
     };
   }
 }
 
-export async function postVoiceTranslate({
-  text,
-  sourceLanguage,
-  targetLanguage,
-}) {
-  try {
-    const response = await API.post("/voice/translate", {
-      text,
-      sourceLanguage,
-      targetLanguage,
-    });
+// export async function postVoiceTranslate({
+//   text,
+//   sourceLanguage,
+//   targetLanguage,
+// }) {
+//   try {
+//     const response = await API.post("/voice/translate", {
+//       text,
+//       sourceLanguage,
+//       targetLanguage,
+//     });
 
-    return response.data;
-  } catch (error) {
-    console.error("Voice Translation API Error:", error);
+//     return response.data;
+//   } catch (error) {
+//     console.error("Voice Translation API Error:", error);
 
-    return {
-      success: false,
-      error: "Voice translation server unavailable",
-    };
-  }
-}
+//     return {
+//       success: false,
+//       error: "Voice translation server unavailable",
+//     };
+//   }
+// }
 
 export async function translateText({
   text,

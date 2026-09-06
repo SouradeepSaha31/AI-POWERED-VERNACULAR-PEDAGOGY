@@ -5,6 +5,9 @@ import dotenv from "dotenv";
 import aiRoutes from "./routes/aiRoutes.js";
 import translationRoutes from "./routes/translationRoutes.js";
 import voiceRoutes from "./routes/voiceRoutes.js";
+import curriculumRoutes from "./routes/curriculumRoutes.js";
+import worksheetRoutes from "./routes/worksheetRoutes.js";
+import flashcardRoutes from "./routes/flashcardRoutes.js";
 
 dotenv.config();
 
@@ -16,6 +19,9 @@ app.use(express.json());
 app.use("/api/ai", aiRoutes);
 app.use("/api/translate", translationRoutes);
 app.use("/api/voice", voiceRoutes);
+app.use("/api/curriculum", curriculumRoutes);
+app.use("/api/worksheet", worksheetRoutes);
+app.use("/api/flashcards", flashcardRoutes);
 
 
 app.get("/", (req, res) => {

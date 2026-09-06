@@ -88,9 +88,9 @@ export default function TranslatePage() {
   };
 
   return (
-    <div className="p-8 max-w-8xl mx-auto space-y-6 bg-blue-300">
+    <div className="p-8 max-w-8xl mx-auto space-y-6">
 
-      <div className=" bg-red-300">
+      <div className="">
         <h1 className="text-3xl font-bold text-slate-900">Vernacular Translator</h1>
         <p className="text-slate-500 mt-1">
           Bidirectional translation between Hindi pedagogy and indigenous Santali (Ol Chiki)
