@@ -10,15 +10,25 @@ export default function VoiceTranslatorPage() {
   const [translatedText, setTranslatedText] = useState("");
   const [loading, setLoading] = useState(false);
   const [latency, setLatency] = useState(0);
+  const [confidence, setConfidence] = useState<number | null>(null);
   const [mode, setMode] = useState("live");
   const [errorMsg, setErrorMsg] = useState("");
   
+  const [sourceLang, setSourceLang] = useState("hi");
+  const [targetLang, setTargetLang] = useState("sat");
+
   const recognitionRef = useRef<any>(null);
+
+  const swapLanguages = () => {
+    setSourceLang(targetLang);
+    setTargetLang(sourceLang);
+  };
 
   const startListening = () => {
     setTeacherText("");
     setTranslatedText("");
     setLatency(0);
+    setConfidence(null);
     setErrorMsg("");
 
     if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
@@ -28,7 +38,7 @@ export default function VoiceTranslatorPage() {
 
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     recognitionRef.current = new SpeechRecognition();
-    recognitionRef.current.lang = 'hi-IN';
+    recognitionRef.current.lang = sourceLang === 'hi' ? 'hi-IN' : 'en-US'; // basic fallback for demo
     recognitionRef.current.continuous = false;
     recognitionRef.current.interimResults = true;
 
@@ -80,13 +90,14 @@ export default function VoiceTranslatorPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           text,
-          sourceLanguage: 'hi',
-          targetLanguage: 'sat' // Santhali
+          sourceLanguage: sourceLang,
+          targetLanguage: targetLang
         })
       });
       const data = await res.json();
       if (data.success) {
         setTranslatedText(data.data.translatedText);
+        setConfidence(data.data.confidence_score);
         setLatency(data.metadata.latencyMs);
         setMode(data.metadata.mode);
         playAudio(data.data.translatedText);
@@ -105,10 +116,20 @@ export default function VoiceTranslatorPage() {
   };
 
   const simulateSpeech = () => {
-    const text = "नमस्ते, आज हम संख्या सीखेंगे।";
+    const text = sourceLang === 'hi' ? "नमस्ते, आज हम संख्या सीखेंगे।" : "ᱡᱚᱦᱟᱨ, ᱛᱮᱦᱮᱧ ᱵᱚᱱ ᱮᱞᱠᱷᱟ ᱪᱮᱫᱚᱜᱼᱟ᱾";
     setTeacherText(text);
     setErrorMsg("");
     translateSpeech(text);
+  };
+
+  const getLanguageName = (code: string) => {
+     return code === 'hi' ? 'Hindi' : 'Santhali';
+  };
+
+  const getConfidenceColor = (score: number) => {
+    if (score >= 90) return "text-green-400 bg-green-900/30 border-green-500/50";
+    if (score >= 70) return "text-yellow-400 bg-yellow-900/30 border-yellow-500/50";
+    return "text-red-400 bg-red-900/30 border-red-500/50";
   };
 
   return (
@@ -126,16 +147,23 @@ export default function VoiceTranslatorPage() {
         <CardContent className="p-8 flex-1 flex flex-col justify-between relative z-10">
           
           <div className="flex justify-between items-center bg-slate-800/50 rounded-full px-6 py-3 border border-slate-700 backdrop-blur-sm">
-            <div className="text-center">
-              <p className="text-xs text-slate-400 font-medium uppercase tracking-wider mb-1">Teacher Language</p>
-              <p className="text-lg font-bold text-white">Hindi</p>
+            <div className="text-center w-32">
+              <p className="text-xs text-slate-400 font-medium uppercase tracking-wider mb-1">Speaker</p>
+              <p className="text-lg font-bold text-white">{getLanguageName(sourceLang)}</p>
             </div>
-            <div className="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center text-slate-300">
-              ↔
-            </div>
-            <div className="text-center">
-              <p className="text-xs text-slate-400 font-medium uppercase tracking-wider mb-1">Student Language</p>
-              <p className="text-lg font-bold text-emerald-400">Santhali</p>
+            
+            <Button 
+               variant="ghost" 
+               className="w-10 h-10 rounded-full bg-slate-700 hover:bg-slate-600 flex items-center justify-center text-slate-300"
+               onClick={swapLanguages}
+               title="Swap Languages"
+            >
+              ⇄
+            </Button>
+            
+            <div className="text-center w-32">
+              <p className="text-xs text-slate-400 font-medium uppercase tracking-wider mb-1">Translation</p>
+              <p className="text-lg font-bold text-emerald-400">{getLanguageName(targetLang)}</p>
             </div>
           </div>
 
@@ -150,14 +178,14 @@ export default function VoiceTranslatorPage() {
             )}
             
             <div className="space-y-2 transition-all">
-              <p className="text-sm font-medium text-slate-400">Teacher said:</p>
+              <p className="text-sm font-medium text-slate-400">Speaker said:</p>
               <div className={`min-h-[4rem] text-2xl md:text-3xl font-medium text-white transition-opacity ${!teacherText ? 'opacity-30' : 'opacity-100'}`}>
                 {teacherText || "Waiting for speech..."}
               </div>
             </div>
 
             <div className="space-y-2">
-              <p className="text-sm font-medium text-emerald-400">Santhali translation:</p>
+              <p className="text-sm font-medium text-emerald-400">Translation:</p>
               <div className="min-h-[4rem]">
                 {loading ? (
                   <div className="flex items-center gap-3 text-emerald-500/70">
@@ -173,13 +201,18 @@ export default function VoiceTranslatorPage() {
               </div>
               
               {translatedText && (
-                <div className="flex items-center gap-4 mt-6">
+                <div className="flex items-center flex-wrap gap-4 mt-6">
                   <Button onClick={() => playAudio(translatedText)} variant="secondary" className="bg-emerald-500 hover:bg-emerald-600 text-white border-0 gap-2 rounded-full px-6">
-                    🔊 Play Translation
+                    🔊 Play
                   </Button>
                   <span className="text-xs text-slate-500 font-medium">
                     Latency: {(latency / 1000).toFixed(1)}s {mode === 'demo' && '(Demo Mode)'}
                   </span>
+                  {confidence && (
+                     <span className={`text-xs px-3 py-1 rounded-full border font-bold ${getConfidenceColor(confidence)}`}>
+                        Confidence: {confidence}%
+                     </span>
+                  )}
                 </div>
               )}
             </div>

@@ -7,7 +7,7 @@ export async function POST(request: Request) {
 
     const startTime = Date.now();
     
-    const translatedText = await aiService.translateConversation(
+    const result = await aiService.translateConversation(
       text, 
       sourceLanguage,
       targetLanguage
@@ -21,7 +21,8 @@ export async function POST(request: Request) {
         sourceLanguage,
         targetLanguage,
         sourceText: text,
-        translatedText
+        translatedText: result.text,
+        confidence_score: result.confidence
       },
       metadata: { latencyMs, mode: process.env.GEMINI_API_KEY ? "live" : "demo" }
     });

@@ -16,6 +16,7 @@ export interface TranslationResult {
   teacher_script: string;
   activities: string[];
   assessment: string[];
+  confidence_score?: number;
 }
 
 export interface Worksheet {
@@ -61,7 +62,7 @@ export interface AIService {
     text: string,
     source: string,
     target: string
-  ): Promise<string>;
+  ): Promise<{ text: string, confidence: number }>;
 }
 
 export class CloudAIService implements AIService {
@@ -92,17 +93,20 @@ export class CloudAIService implements AIService {
         ],
         assessment: [
           "[Demo] ᱢᱚᱬᱮ ᱜᱚᱴᱟᱝ ᱡᱤᱱᱤᱥ ᱩᱫᱩᱜ ᱠᱟᱛᱮ ᱜᱤᱫᱽᱨᱟᱹ ᱞᱮᱠᱷᱟ ᱦᱚᱪᱚᱭᱮᱢ᱾"
-        ]
+        ],
+        confidence_score: 95
       };
     }
 
     try {
       const prompt = `
 You are an educational translation engine specializing in Indian mother-tongue primary education.
-Translate the supplied Hindi FLN content into the requested target language (${targetLang}).
+Translate the supplied FLN content from the source language (${sourceLang}) into the requested target language (${targetLang}).
 Preserve educational meaning, instructions, questions, numbers, learning objectives and assessment intent.
 Use natural, child-friendly language appropriate for primary-school students.
 Do not invent information.
+
+Also, provide a confidence_score between 0 and 100 representing how confident you are in this translation.
 
 Return structured JSON exactly matching this schema:
 {
@@ -111,7 +115,8 @@ Return structured JSON exactly matching this schema:
   "learning_objective": "...",
   "teacher_script": "...",
   "activities": ["..."],
-  "assessment": ["..."]
+  "assessment": ["..."],
+  "confidence_score": 90
 }
 
 Source Content (${sourceLang}):
@@ -222,10 +227,10 @@ Return structured JSON exactly matching this schema:
     return JSON.parse(response.text || "[]");
   }
 
-  async translateConversation(text: string, source: string, target: string): Promise<string> {
+  async translateConversation(text: string, source: string, target: string): Promise<{ text: string, confidence: number }> {
     if (this.isDemoMode || !this.ai) {
       await new Promise((r) => setTimeout(r, 500));
-      return `[Demo Translated to ${target}]: ${text}`;
+      return { text: `[Demo Translated to ${target}]: ${text}`, confidence: 98 };
     }
 
     const prompt = `Translate the following ${source} text to ${target}. Return ONLY the translated text, nothing else.\n\nText: ${text}`;
@@ -235,7 +240,7 @@ Return structured JSON exactly matching this schema:
       contents: prompt,
     });
     
-    return response.text?.trim() || "";
+    return { text: response.text?.trim() || "", confidence: 85 };
   }
 }
 

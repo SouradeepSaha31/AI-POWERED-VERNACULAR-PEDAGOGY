@@ -27,6 +27,9 @@ async function main() {
     create: { code: 'ho', name: 'Ho', status: 'coming_soon' },
   })
 
+  await prisma.worksheet.deleteMany({})
+  await prisma.curriculumLesson.deleteMany({})
+
   // Seed Lessons
   const lessons = [
     {
@@ -35,6 +38,7 @@ async function main() {
       topic: 'Numbers 1–10',
       title: 'Learning Numbers 1 to 10',
       learningObjective: 'Students will identify and count numbers from 1 to 10.',
+      nipunCode: 'M-101',
       content: JSON.stringify({
         teacherScript: 'Today we will learn how to count from one to ten.',
         activity: 'Ask students to count ten objects in the classroom.',
@@ -48,6 +52,7 @@ async function main() {
       topic: 'Counting Objects',
       title: 'Counting Apples and Oranges',
       learningObjective: 'Students will count physical objects accurately.',
+      nipunCode: 'M-102',
       content: JSON.stringify({
         teacherScript: 'Let us count these apples. One, two, three.',
         activity: 'Give each student a handful of blocks to count.',
@@ -61,6 +66,7 @@ async function main() {
       topic: 'Basic Shapes',
       title: 'Recognizing Shapes',
       learningObjective: 'Students will identify circles, squares, and triangles.',
+      nipunCode: 'L-101',
       content: JSON.stringify({
         teacherScript: 'This is a circle. It is round like the sun.',
         activity: 'Draw a circle in the air with your finger.',
@@ -74,6 +80,7 @@ async function main() {
       topic: 'Alphabet Recognition',
       title: 'Letters A to E',
       learningObjective: 'Students will recognize the first five letters of the alphabet.',
+      nipunCode: 'L-102',
       content: JSON.stringify({
         teacherScript: 'Let us say the letters: A, B, C, D, E.',
         activity: 'Sing the alphabet song.',
@@ -87,6 +94,7 @@ async function main() {
       topic: 'Simple Words',
       title: 'Reading 3-Letter Words',
       learningObjective: 'Students will read simple CVC words.',
+      nipunCode: 'L-103',
       content: JSON.stringify({
         teacherScript: 'C-A-T makes Cat. D-O-G makes Dog.',
         activity: 'Match the word to the picture.',

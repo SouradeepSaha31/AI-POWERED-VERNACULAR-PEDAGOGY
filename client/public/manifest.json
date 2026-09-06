@@ -1,0 +1,16 @@
+{
+  "name": "AI Vernacular Pedagogy",
+  "short_name": "Vernacular AI",
+  "description": "AI-powered translations and tools for tribal language education.",
+  "start_url": "/dashboard/translate",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#10b981",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "192x192",
+      "type": "image/x-icon"
+    }
+  ]
+}

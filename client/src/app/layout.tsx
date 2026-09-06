@@ -7,6 +7,8 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "AI Vernacular Classroom",
   description: "Empowering teachers to teach children in their mother tongue.",
+  manifest: "/manifest.json",
+  themeColor: "#10b981",
 };
 
 export default function RootLayout({

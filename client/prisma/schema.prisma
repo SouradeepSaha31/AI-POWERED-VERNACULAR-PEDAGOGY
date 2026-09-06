@@ -33,6 +33,7 @@ model CurriculumLesson {
   learningObjective String
   content           String   // JSON string containing script, activity, assessment
   language          String   @default("hi")
+  nipunCode         String?
   
   worksheets        Worksheet[]
 }
