@@ -24,29 +24,6 @@ export async function getCurriculum(id) {
   }
 }
 
-// export async function postTranslate({
-//   lessonId,
-//   sourceLanguage,
-//   targetLanguage,
-// }) {
-//   try {
-//     const response = await API.post("/translate", {
-//       lessonId,
-//       sourceLanguage,
-//       targetLanguage,
-//     });
-
-//     return response.data;
-//   } catch (error) {
-//     console.error("Translation API Error:", error);
-
-//     return {
-//       success: false,
-//       error: "Translation server unavailable",
-//     };
-//   }
-// }
-
 export async function postWorksheet({
   lessonId,
   targetLanguage,
@@ -118,57 +95,106 @@ export async function postVoiceTranslate({
   }
 }
 
-
 export async function translateText({
-    text,
-    sourceLanguage = "hi",
-    targetLanguage = "sat"
+  text,
+  sourceLanguage = "hi",
+  targetLanguage = "sat"
 }) {
+  try {
+    const response = await API.post("/translate", {
+      text,
+      sourceLanguage,
+      targetLanguage
+    });
 
-    try {
+    return response.data;
+  } catch (error) {
+    console.error("Translation Error:", error);
 
-        const response = await API.post("/translate", {
-            text,
-            sourceLanguage,
-            targetLanguage
-        });
-
-        return response.data;
-
-    } catch (error) {
-
-        console.error("Translation Error:", error);
-
-        return {
-            success: false,
-            error: "Translation server unavailable"
-        };
-    }
+    return {
+      success: false,
+      error: error.response?.data?.error || "Translation server unavailable"
+    };
+  }
 }
 
-export async function voiceTranslate(audioFile) {
+export async function voiceTranslate(
+  audioFile,
+  sourceLanguage = "hi",
+  targetLanguage = "sat"
+) {
   try {
     const formData = new FormData();
 
-    formData.append("file", audioFile);
+    formData.append("file", audioFile, "recording.webm");
+    formData.append("sourceLanguage", sourceLanguage);
+    formData.append("targetLanguage", targetLanguage);
 
-    const response = await API.post("/voice", formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      }
+    const response = await API.post(
+      "/voice",
+      formData
     );
 
     return response.data;
 
   } catch (error) {
-
     console.error("Voice Translation Error:", error);
 
     return {
       success: false,
-      error: "Voice translation server unavailable",
+      error:
+        error.response?.data?.error ||
+        "Voice translation server unavailable",
+    };
+  }
+}
+
+/**
+ * Converts speech audio recording to text via /api/voice/stt
+ */
+export async function postSpeechToText(audioBlob) {
+  try {
+    const formData = new FormData();
+    formData.append("file", audioBlob, "speech.webm");
+
+    const response = await API.post("/voice/stt", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Speech-to-Text Error:", error);
+    return {
+      success: false,
+      error: error.response?.data?.error || "Speech-to-Text server unavailable",
+    };
+  }
+}
+
+/**
+ * Converts text into audio speech via /api/voice/tts
+ * Returns a playable object URL for HTML5 Audio
+ */
+export async function postTextToSpeech({ text, language = "hi" }) {
+  try {
+    const response = await API.post(
+      "/voice/tts",
+      { text, language },
+      { responseType: "blob" }
+    );
+
+    const audioUrl = URL.createObjectURL(response.data);
+    return {
+      success: true,
+      audioUrl
+    };
+  } catch (error) {
+    console.error("Text-to-Speech Error:", error);
+    return {
+      success: false,
+      error: "Text-to-Speech synthesis unavailable",
     };
   }
 }
@@ -177,4 +203,3 @@ export async function testBackend() {
   const response = await API.get("/ai/health");
   return response.data;
 }
-

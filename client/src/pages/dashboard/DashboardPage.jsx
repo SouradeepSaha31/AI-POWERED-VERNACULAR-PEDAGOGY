@@ -52,11 +52,11 @@ export default function DashboardPage() {
         <Card className="bg-white">
           <CardContent className="p-6 flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-slate-500 mb-1">Voice Sessions</p>
+              <p className="text-sm font-medium text-slate-500 mb-1">Flashcards Gen.</p>
               <p className="text-3xl font-bold text-slate-900">5</p>
             </div>
             <div className="w-12 h-12 rounded-full bg-purple-50 flex items-center justify-center text-purple-500">
-              <span className="text-2xl">🎤</span>
+              <span className="text-2xl"><ImageIcon className="w-6 h-6" /></span>
             </div>
           </CardContent>
         </Card>
@@ -84,13 +84,13 @@ export default function DashboardPage() {
                 <div className="w-12 h-12 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                   <Languages className="w-6 h-6" />
                 </div>
-                <CardTitle>Lesson Translator</CardTitle>
+                <CardTitle>Language Translator</CardTitle>
                 <CardDescription>Translate Hindi FLN curriculum into native languages automatically.</CardDescription>
               </CardHeader>
             </Card>
           </Link>
 
-          <Link to="/dashboard/voice" className="group">
+          {/* <Link to="/dashboard/voice" className="group">
             <Card className="h-full hover:border-emerald-300 hover:shadow-md transition-all cursor-pointer bg-gradient-to-br from-white to-slate-50">
               <CardHeader>
                 <div className="w-12 h-12 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
@@ -100,7 +100,7 @@ export default function DashboardPage() {
                 <CardDescription>Real-time conversational translation between teacher and student.</CardDescription>
               </CardHeader>
             </Card>
-          </Link>
+          </Link> */}
 
           <Link to="/dashboard/worksheets" className="group">
             <Card className="h-full hover:border-emerald-300 hover:shadow-md transition-all cursor-pointer bg-gradient-to-br from-white to-slate-50">

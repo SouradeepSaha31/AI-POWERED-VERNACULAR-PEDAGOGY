@@ -7,3 +7,4 @@ client/dist-ssr/
 server/node_modules/
 server/.env
 model/.venv/
+model/__pycache__/

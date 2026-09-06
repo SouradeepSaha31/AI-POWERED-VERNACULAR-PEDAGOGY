@@ -1,8 +1,9 @@
-from fastapi import FastAPI, UploadFile, File
+from fastapi import Form
+from fastapi import FastAPI, UploadFile, File, BackgroundTasks, HTTPException
+from fastapi.responses import FileResponse, JSONResponse
 from pydantic import BaseModel
 import os
 import uuid
-
 
 from translation.translator import translate_text
 from speech.stt import speech_to_text
@@ -33,8 +34,7 @@ class TranslationRequest(BaseModel):
 
 @app.post("/translate")
 def translate(request: TranslationRequest):
-
-    translated_text = translate_text(
+    translated_text, confidence = translate_text(
         request.text,
         request.source_language,
         request.target_language
@@ -46,27 +46,41 @@ def translate(request: TranslationRequest):
         "translated_text": translated_text,
         "source_language": request.source_language,
         "target_language": request.target_language,
-        "confidence": 0.85
+        "confidence": confidence
     }
 
 
 @app.post("/speech-to-text")
 async def speech_to_text_api(
-    file: UploadFile = File(...)
+    file: UploadFile = File(...),
+    language: str = Form("hi")
 ):
-
-    audio_path = f"speech/{file.filename}"
+    os.makedirs("speech/uploads", exist_ok=True)
+    temp_filename = f"{uuid.uuid4()}_{file.filename}"
+    audio_path = os.path.join("speech/uploads", temp_filename)
 
     with open(audio_path, "wb") as buffer:
         buffer.write(await file.read())
 
-    result = speech_to_text(audio_path)
-
-    return {
-        "success": True,
-        "text": result["text"],
-        "language": result["language"]
-    }
+    try:
+        result = speech_to_text(
+            audio_path,
+            language=language
+        )
+        return {
+            "success": True,
+            "text": result["text"],
+            "language": result["language"]
+        }
+    except Exception as error:
+        print("STT Error:", error)
+        return JSONResponse(
+            status_code=500,
+            content={"success": False, "error": str(error)}
+        )
+    finally:
+        if os.path.exists(audio_path):
+            os.remove(audio_path)
 
 
 class TTSRequest(BaseModel):
@@ -74,12 +88,44 @@ class TTSRequest(BaseModel):
     language: str = "hi"
 
 
-@app.post("/voice-to-voice")
-async def voice_to_voice(file: UploadFile = File(...)):
+@app.post("/text-to-speech")
+async def text_to_speech_api(
+    request: TTSRequest,
+    background_tasks: BackgroundTasks
+):
+    try:
+        audio_path = await text_to_speech(request.text, request.language)
 
-    # -----------------------------
-    # 1. Save uploaded Hindi audio
-    # -----------------------------
+        def remove_file(path: str):
+            if os.path.exists(path):
+                os.remove(path)
+
+        background_tasks.add_task(remove_file, audio_path)
+
+        return FileResponse(
+            audio_path,
+            media_type="audio/mpeg",
+            filename="speech.mp3"
+        )
+    except ValueError as val_err:
+        return JSONResponse(
+            status_code=400,
+            content={"success": False, "error": str(val_err)}
+        )
+    except Exception as error:
+        print("TTS Error:", error)
+        return JSONResponse(
+            status_code=500,
+            content={"success": False, "error": str(error)}
+        )
+
+
+@app.post("/voice-to-voice")
+async def voice_to_voice(
+    file: UploadFile = File(...),
+    source_language: str = Form("hi"),
+    target_language: str = Form("sat")
+):
     os.makedirs("speech/uploads", exist_ok=True)
 
     filename = f"{uuid.uuid4()}_{file.filename}"
@@ -90,40 +136,60 @@ async def voice_to_voice(file: UploadFile = File(...)):
 
     try:
 
-        # -----------------------------
-        # 2. Speech → Hindi Text
-        # -----------------------------
+        # -------------------------
+        # Speech → Text
+        # -------------------------
+
+        stt_language = source_language
+
+        # Current Whisper setup supports Hindi reliably.
+        # Santali speech recognition is not guaranteed by Whisper.
+        if source_language == "sat":
+            stt_language = None
+
         stt_result = speech_to_text(
             input_path,
-            language="hi"
+            language=stt_language
         )
 
-        raw_hindi_text = stt_result["text"]
+        raw_text = stt_result["text"]
 
-        hindi_text = roman_hindi_to_devanagari(
-        raw_hindi_text
+        # -------------------------
+        # Hindi Roman text cleanup
+        # -------------------------
+
+        if source_language == "hi":
+            source_text = roman_hindi_to_devanagari(raw_text)
+        else:
+            source_text = raw_text
+
+        # -------------------------
+        # Text Translation
+        # -------------------------
+
+        translated_text, confidence = translate_text(
+            source_text,
+            source_language=source_language,
+            target_language=target_language
         )
 
-        # -----------------------------
-        # 3. Hindi → Santali
-        # -----------------------------
-        santali_text = translate_text(
-            hindi_text,
-            source_language="hi",
-            target_language="sat"
-        )
-
-        # -----------------------------
-        # 4. Return text only
-        # -----------------------------
         return {
             "success": True,
-            "input_text": hindi_text,
-            "translated_text": santali_text,
-            "source_language": "hi",
-            "target_language": "sat",
-            "voice_output_available": False,
-            "message": "Santali voice output is not implemented yet."
+            "input_text": source_text,
+            "translated_text": translated_text,
+            "source_language": source_language,
+            "target_language": target_language,
+            "confidence": confidence,
+
+            "voice_output_available": (
+                target_language == "hi"
+            ),
+
+            "message": (
+                "Hindi voice output available."
+                if target_language == "hi"
+                else "Santali voice output is not implemented yet."
+            )
         }
 
     except Exception as error:
@@ -137,6 +203,5 @@ async def voice_to_voice(file: UploadFile = File(...)):
 
     finally:
 
-        # Delete temporary audio
         if os.path.exists(input_path):
             os.remove(input_path)
