@@ -240,6 +240,47 @@ function getChapterType(subject) {
   return "awareness";
 }
 
+function getLearningOutcomes(
+  grade,
+  subject,
+  chapterTitle,
+  chapterType
+) {
+  const outcomes = {
+    math: [
+      `विद्यार्थी कक्षा ${grade} स्तर पर ${chapterTitle} की मूल अवधारणाओं को समझ सकेंगे।`,
+      `${chapterTitle} से संबंधित सरल समस्याओं को हल कर सकेंगे।`,
+      `दैनिक जीवन में ${chapterTitle} का उपयोग पहचान सकेंगे।`,
+    ],
+
+    hindi: [
+      `विद्यार्थी ${chapterTitle} से संबंधित शब्दों और वाक्यों को पहचान सकेंगे।`,
+      `${chapterTitle} का सही प्रयोग बोलने और लिखने में कर सकेंगे।`,
+      `${chapterTitle} से संबंधित सरल पाठ को समझ सकेंगे।`,
+    ],
+
+    english: [
+      `Students will identify the basic concepts of ${chapterTitle}.`,
+      `Students will use ${chapterTitle} in simple communication.`,
+      `Students will understand and respond to simple examples related to ${chapterTitle}.`,
+    ],
+
+    evs: [
+      `विद्यार्थी ${chapterTitle} से संबंधित मुख्य अवधारणाओं को पहचान सकेंगे।`,
+      `${chapterTitle} को अपने दैनिक जीवन से जोड़ सकेंगे।`,
+      `${chapterTitle} से संबंधित सरल प्रश्नों का उत्तर दे सकेंगे।`,
+    ],
+
+    awareness: [
+      `विद्यार्थी ${chapterTitle} के बारे में बुनियादी जानकारी प्राप्त कर सकेंगे।`,
+      `${chapterTitle} से संबंधित महत्वपूर्ण तथ्यों को पहचान सकेंगे।`,
+      `${chapterTitle} का दैनिक जीवन में महत्व समझ सकेंगे।`,
+    ],
+  };
+
+  return outcomes[chapterType] || outcomes.awareness;
+}
+
 export const curriculumBooks = [];
 
 for (let grade = 1; grade <= 5; grade++) {
@@ -259,21 +300,35 @@ for (let grade = 1; grade <= 5; grade++) {
         description: bookSource.description,
         sourceUrl: bookSource.sourceUrl,
 
-        chapters: chapterNames.map((title, index) => ({
+        chapters: chapterNames.map((title, index) => {
+        const chapterType = getChapterType(subject);
+
+        return {
           id: `${bookId}-chapter-${index + 1}`,
+
           chapterNumber: index + 1,
+
           title,
-          type: getChapterType(subject),
+
+          type: chapterType,
 
           learningObjective:
             `विद्यार्थी ${title} से संबंधित बुनियादी अवधारणाओं को समझ सकेंगे।`,
 
+          learningOutcomes: getLearningOutcomes(
+            grade,
+            subject,
+            title,
+            chapterType
+          ),
+        
           keywords: [
             title,
             subject,
             `कक्षा ${grade}`,
           ],
-        })),
+        };
+      })
       });
     });
   }

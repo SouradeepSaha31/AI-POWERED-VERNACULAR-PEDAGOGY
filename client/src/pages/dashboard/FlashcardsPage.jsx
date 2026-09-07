@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { getFlashcardTopics, postFlashcards } from "@/lib/api";
+import { recordActivity } from "@/lib/analytics";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 
@@ -70,6 +71,12 @@ export default function FlashcardsPage() {
         setFlashcardData(
           result.data
         );
+
+        recordActivity({
+          type: "flashcard",
+          title: "Flashcards generated",
+          details: TOPIC_LABELS[result.data.topic] || result.data.topic,
+        });
 
       } else {
 

@@ -3,6 +3,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { translateText, postTextToSpeech } from "@/lib/api";
+import { recordActivity } from "@/lib/analytics";
 import ConfidenceBadge from "@/components/ConfidenceBadge";
 import AudioMicButton from "@/components/AudioMicButton";
 
@@ -55,6 +56,14 @@ export default function TranslatePage() {
       if (result.success) {
         setTranslatedText(result.translated_text);
         setConfidence(result.confidence);
+
+        recordActivity({
+          type: "translation",
+          title: "Translation completed",
+          details: `${sourceLang.toUpperCase()} → ${targetLang.toUpperCase()}`,
+        });
+
+
       } else {
         setError(result.error || "Translation failed");
       }

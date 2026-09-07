@@ -19,6 +19,7 @@ import {
   getBook,
   postWorksheet,
 } from "@/lib/api";
+import { recordActivity } from "@/lib/analytics";
 
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
@@ -98,6 +99,11 @@ export default function WorksheetsPage() {
 
     if (result.success) {
       setWorksheet(result.data);
+      recordActivity({
+        type: "worksheet",
+        title: "Worksheet generated",
+        details: `${result.data.book?.subject || ""} • ${result.data.chapter?.title || ""}`,
+      });
     } else {
       setError(result.error);
     }

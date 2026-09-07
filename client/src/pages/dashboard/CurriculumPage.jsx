@@ -86,18 +86,17 @@ import { Button } from "@/components/ui/button";
 
 import {
   getCurriculumBooks,
+  getBook
 } from "@/lib/api";
 
 export default function CurriculumPage() {
   const [grade, setGrade] = useState(1);
-  const [subject, setSubject] =
-    useState("Mathematics");
-
+  const [subject, setSubject] = useState("Mathematics");
   const [books, setBooks] = useState([]);
-  const [loading, setLoading] =
-    useState(false);
-  const [error, setError] =
-    useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [selectedBook, setSelectedBook] = useState(null);
+  const [showOutcomes, setShowOutcomes] = useState(false);
 
   const subjects = [
     "Hindi",
@@ -125,6 +124,21 @@ export default function CurriculumPage() {
 
     setLoading(false);
   };
+
+  const handleViewOutcomes = async (bookId) => {
+  setError("");
+
+  const result = await getBook(bookId);
+
+  if (result.success) {
+    setSelectedBook(result.data);
+    setShowOutcomes(true);
+  } else {
+    setError(
+      result.error || "Unable to load learning outcomes."
+    );
+  }
+};
 
   return (
     <div className="p-8 max-w-6xl mx-auto space-y-8">
@@ -232,7 +246,7 @@ export default function CurriculumPage() {
 
               <Card
                 key={book.id}
-                className="flex flex-col"
+                className="flex flex-col "
               >
 
                 <CardHeader>
@@ -269,7 +283,7 @@ export default function CurriculumPage() {
                     📚 {book.chapterCount} chapters
                   </div>
 
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 flex-wrap">
 
                     <a
                       href={book.sourceUrl}
@@ -294,6 +308,16 @@ export default function CurriculumPage() {
                       </Button>
                     </Link>
 
+                    <Button
+                      variant="outline"
+                      className="w-full"
+                      onClick={() =>
+                        handleViewOutcomes(book.id)
+                      }
+                    >
+                      📘 Learning Outcomes
+                    </Button>
+
                   </div>
 
                 </CardContent>
@@ -305,6 +329,120 @@ export default function CurriculumPage() {
           </div>
         </div>
       )}
+
+      {/* learning outcomes */}
+
+      {showOutcomes && selectedBook && (
+  <Card className="mt-8 border-emerald-200">
+
+    <CardHeader>
+
+      <div className="flex items-center justify-between">
+
+        <div>
+          <CardTitle>
+            Learning Outcomes
+          </CardTitle>
+
+          <p className="text-sm text-slate-500 mt-1">
+            {selectedBook.title}
+          </p>
+
+          <p className="text-sm text-slate-500">
+            Class {selectedBook.grade} •{" "}
+            {selectedBook.subject}
+          </p>
+        </div>
+
+        <Button
+          variant="outline"
+          onClick={() => {
+            setShowOutcomes(false);
+            setSelectedBook(null);
+          }}
+        >
+          Close
+        </Button>
+
+      </div>
+
+    </CardHeader>
+
+    <CardContent>
+
+      <div className="space-y-6">
+
+        {selectedBook.chapters?.map(
+          (chapter) => (
+
+            <div
+              key={chapter.id}
+              className="border rounded-lg p-5 bg-slate-50"
+            >
+
+              <div className="flex items-center gap-3 mb-3">
+
+                <span className="text-xs font-semibold bg-emerald-100 text-emerald-700 px-2 py-1 rounded">
+                  Chapter {chapter.chapterNumber}
+                </span>
+
+                <h3 className="font-bold text-slate-900">
+                  {chapter.title}
+                </h3>
+
+              </div>
+
+
+              <p className="text-sm text-slate-600 mb-4">
+                <strong>
+                  Learning Objective:
+                </strong>{" "}
+                {chapter.learningObjective}
+              </p>
+
+
+              <p className="text-sm font-semibold text-slate-800 mb-2">
+                Expected Learning Outcomes
+              </p>
+
+              <div className="space-y-2">
+
+                {(
+                  chapter.learningOutcomes || []
+                ).map(
+                  (outcome, index) => (
+
+                    <div
+                      key={index}
+                      className="flex gap-2 text-sm text-slate-600"
+                    >
+
+                      <span className="text-emerald-600 font-bold">
+                        ✓
+                      </span>
+
+                      <span>
+                        {outcome}
+                      </span>
+
+                    </div>
+
+                  )
+                )}
+
+              </div>
+
+            </div>
+
+          )
+        )}
+
+      </div>
+
+    </CardContent>
+
+  </Card>
+)}
 
     </div>
   );
