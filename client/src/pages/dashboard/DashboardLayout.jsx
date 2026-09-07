@@ -18,44 +18,44 @@ export default function DashboardLayout() {
             <span className="w-8 h-8 rounded-md bg-emerald-100 text-emerald-600 flex items-center justify-center">
               <Languages className="w-5 h-5" />
             </span>
-            <span>AI Classroom</span>
+            <span className="text-slate-400">AI Classroom</span>
           </Link>
         </div>
 
         <nav className="flex-1 overflow-y-auto py-4">
           <ul className="space-y-1 px-3">
             <li>
-              <NavLink to="/dashboard" className={({isActive}) => `flex items-center gap-3 px-3 py-2 rounded-md text-slate-700 hover:bg-blue-200 font-medium ${isActive ? "bg-blue-200" : ""}`}>
+              <NavLink to="/dashboard" end className={({isActive}) => `flex items-center gap-3 px-3 py-2 rounded-md text-slate-700 hover:bg-blue-100 font-medium ${isActive ? "bg-blue-100" : ""}`}>
                 <LayoutDashboard className="w-5 h-5 text-slate-500" />
                 Dashboard
               </NavLink>
             </li>
             <li>
-              <NavLink to="/dashboard/translate" className={({isActive}) => `flex items-center gap-3 px-3 py-2 rounded-md text-slate-700 hover:bg-blue-200 font-medium ${isActive ? "bg-blue-200" : ""}`}>
+              <NavLink to="/dashboard/translate" className={({isActive}) => `flex items-center gap-3 px-3 py-2 rounded-md text-slate-700 hover:bg-blue-100 font-medium ${isActive ? "bg-blue-100" : ""}`}>
                 <Languages className="w-5 h-5 text-slate-500" />
                 Language Translator
               </NavLink>
             </li>
             {/* <li>
-              <NavLink to="/dashboard/voice" className={({isActive}) => `flex items-center gap-3 px-3 py-2 rounded-md text-slate-700 hover:bg-blue-200 font-medium ${isActive ? "bg-blue-200" : ""}`}>
+              <NavLink to="/dashboard/voice" className={({isActive}) => `flex items-center gap-3 px-3 py-2 rounded-md text-slate-700 hover:bg-blue-100 font-medium ${isActive ? "bg-blue-100" : ""}`}>
                 <span className="w-5 h-5 flex items-center justify-center bg-emerald-100 text-emerald-600 rounded-full shrink-0">🎤</span>
                 Voice Translator
               </NavLink>
             </li> */}
             <li>
-              <NavLink to="/dashboard/curriculum" className={({isActive}) => `flex items-center gap-3 px-3 py-2 rounded-md text-slate-700 hover:bg-blue-200 font-medium ${isActive ? "bg-blue-200" : ""}`}>
+              <NavLink to="/dashboard/curriculum" className={({isActive}) => `flex items-center gap-3 px-3 py-2 rounded-md text-slate-700 hover:bg-blue-100 font-medium ${isActive ? "bg-blue-100" : ""}`}>
                 <BookOpen className="w-5 h-5 text-slate-500" />
                 Curriculum
               </NavLink>
             </li>
             <li>
-              <NavLink to="/dashboard/worksheets" className={({isActive}) => `flex items-center gap-3 px-3 py-2 rounded-md text-slate-700 hover:bg-blue-200 font-medium ${isActive ? "bg-blue-200" : ""}`}>
+              <NavLink to="/dashboard/worksheets" className={({isActive}) => `flex items-center gap-3 px-3 py-2 rounded-md text-slate-700 hover:bg-blue-100 font-medium ${isActive ? "bg-blue-100" : ""}`}>
                 <FileText className="w-5 h-5 text-slate-500" />
                 Worksheets
               </NavLink>
             </li>
             <li>
-              <NavLink to="/dashboard/flashcards" className={({isActive}) => `flex items-center gap-3 px-3 py-2 rounded-md text-slate-700 hover:bg-blue-200 font-medium ${isActive ? "bg-blue-200" : ""}`}>
+              <NavLink to="/dashboard/flashcards" className={({isActive}) => `flex items-center gap-3 px-3 py-2 rounded-md text-slate-700 hover:bg-blue-100 font-medium ${isActive ? "bg-blue-100" : ""}`}>
                 <ImageIcon className="w-5 h-5 text-slate-500" />
                 Flashcards
               </NavLink>
@@ -64,7 +64,7 @@ export default function DashboardLayout() {
               <div className="px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider">Library</div>
             </li> */}
             <li>
-              <NavLink to="/dashboard/offline" className={({isActive}) => `flex items-center gap-3 px-3 py-2 rounded-md text-slate-700 hover:bg-blue-200 font-medium ${isActive ? "bg-blue-200" : ""}`}>
+              <NavLink to="/dashboard/offline" className={({isActive}) => `flex items-center gap-3 px-3 py-2 rounded-md text-slate-700 hover:bg-blue-100 font-medium ${isActive ? "bg-blue-100" : ""}`}>
                 <WifiOff className="w-5 h-5 text-slate-500" />
                 Offline Readiness
               </NavLink>

@@ -1,81 +1,296 @@
-export const curriculumLessons = [
-  {
-    id: "lesson-1",
-    grade: 1,
-    subject: "Foundational Numeracy",
-    topic: "संख्या 1 से 10",
-    title: "1 से 10 तक संख्याएँ",
-    learningObjective:
-      "विद्यार्थी 1 से 10 तक की संख्याओं को पहचान और गिन सकेंगे।",
-    teacherScript:
-      "आज हम एक से दस तक की संख्याएँ सीखेंगे।",
-    activity:
-      "विद्यार्थियों से कक्षा में रखी दस वस्तुओं को गिनने के लिए कहें।",
-    assessment:
-      "पाँच वस्तुएँ दिखाएँ और बच्चे से उनकी संख्या पूछें।",
-  },
+const SUBJECTS = [
+  "Hindi",
+  "Mathematics",
+  "English",
+  "Environmental Studies",
+  "General Awareness",
+];
 
+const SOURCE_BOOKS = [
   {
-    id: "lesson-2",
-    grade: 1,
-    subject: "Foundational Numeracy",
-    topic: "वस्तुओं की गिनती",
-    title: "सेब और संतरे गिनना",
-    learningObjective:
-      "विद्यार्थी वस्तुओं की सही संख्या गिन सकेंगे।",
-    teacherScript:
-      "आइए इन सेबों को गिनते हैं। एक, दो, तीन।",
-    activity:
-      "प्रत्येक विद्यार्थी को कुछ ब्लॉक दें और उन्हें गिनने के लिए कहें।",
-    assessment:
-      "तुम्हारे पास कितने ब्लॉक हैं?",
+    suffix: "textbook",
+    label: "NCERT Textbook",
+    type: "Textbook",
+    description: "Primary curriculum reference material.",
+    source: "NCERT",
+    sourceUrl: "https://ncert.nic.in/textbook.php",
   },
-
   {
-    id: "lesson-3",
-    grade: 1,
-    subject: "Language",
-    topic: "आकृतियाँ",
-    title: "आकृतियों को पहचानना",
-    learningObjective:
-      "विद्यार्थी वृत्त, वर्ग और त्रिभुज को पहचान सकेंगे।",
-    teacherScript:
-      "यह एक वृत्त है। यह सूर्य की तरह गोल है।",
-    activity:
-      "अपनी उंगली से हवा में एक वृत्त बनाएँ।",
-    assessment:
-      "उस आकृति की ओर इशारा करें जो एक वर्ग है।",
+    suffix: "fln",
+    label: "FLN Activity Book",
+    type: "Activity Book",
+    description: "Foundational Literacy and Numeracy focused activities.",
+    source: "NIPUN Bharat / FLN",
+    sourceUrl: "https://nipunbharat.education.gov.in/",
   },
-
   {
-    id: "lesson-4",
-    grade: 1,
-    subject: "Language",
-    topic: "अक्षर पहचान",
-    title: "पहले पाँच अक्षर",
-    learningObjective:
-      "विद्यार्थी A, B, C, D और E अक्षरों को पहचान सकेंगे।",
-    teacherScript:
-      "आइए अक्षर बोलते हैं: A, B, C, D, E।",
-    activity:
-      "बच्चों के साथ अक्षरों का गीत गाएँ।",
-    assessment:
-      "B के बाद कौन सा अक्षर आता है?",
-  },
-
-  {
-    id: "lesson-5",
-    grade: 1,
-    subject: "Language",
-    topic: "सरल शब्द",
-    title: "तीन अक्षर वाले शब्द पढ़ना",
-    learningObjective:
-      "विद्यार्थी सरल तीन अक्षर वाले शब्द पढ़ सकेंगे।",
-    teacherScript:
-      "C-A-T मिलकर Cat बनता है। D-O-G मिलकर Dog बनता है।",
-    activity:
-      "शब्द को सही चित्र से मिलाएँ।",
-    assessment:
-      "इस शब्द को पढ़ें: B-A-T।",
+    suffix: "teacher",
+    label: "Teacher Handbook",
+    type: "Teacher Resource",
+    description: "Teaching and classroom activity reference.",
+    source: "NCERT / FLN",
+    sourceUrl: "https://www.ncert.nic.in/",
   },
 ];
+
+const CHAPTERS = {
+  1: {
+    Hindi: [
+      "अक्षर पहचान",
+      "स्वर और व्यंजन",
+      "सरल शब्द",
+      "सरल वाक्य",
+      "चित्र देखकर बोलना",
+    ],
+    Mathematics: [
+      "संख्या 1 से 10",
+      "संख्या 11 से 20",
+      "वस्तुओं की गिनती",
+      "आकार और आकृतियाँ",
+      "तुलना और माप",
+    ],
+    English: [
+      "Alphabet Recognition",
+      "Capital and Small Letters",
+      "Simple Words",
+      "Three-Letter Words",
+      "Simple Sentences",
+    ],
+    "Environmental Studies": [
+      "मेरा परिवार",
+      "मेरा विद्यालय",
+      "पौधे",
+      "पशु",
+      "स्वच्छता",
+    ],
+    "General Awareness": [
+      "मेरा शरीर",
+      "रंग और आकार",
+      "फल और सब्जियाँ",
+      "यातायात के साधन",
+      "सुरक्षा के नियम",
+    ],
+  },
+
+  2: {
+    Hindi: [
+      "मात्राओं की पहचान",
+      "शब्द निर्माण",
+      "वाक्य पढ़ना",
+      "कहानी समझना",
+      "चित्र वर्णन",
+    ],
+    Mathematics: [
+      "दो अंकों की संख्याएँ",
+      "स्थान-मूल्य",
+      "जोड़",
+      "घटाव",
+      "समय और पैसा",
+    ],
+    English: [
+      "Common Words",
+      "Nouns",
+      "Simple Sentences",
+      "Reading Practice",
+      "Question Words",
+    ],
+    "Environmental Studies": [
+      "मेरा घर",
+      "हमारे भोजन",
+      "पौधों की देखभाल",
+      "जानवर और उनके घर",
+      "जल",
+    ],
+    "General Awareness": [
+      "स्वास्थ्य और स्वच्छता",
+      "त्योहार",
+      "परिवार और समुदाय",
+      "यातायात नियम",
+      "मौसम",
+    ],
+  },
+
+  3: {
+    Hindi: [
+      "संज्ञा की पहचान",
+      "वचन",
+      "वाक्य निर्माण",
+      "कहानी लेखन",
+      "अनुच्छेद",
+    ],
+    Mathematics: [
+      "तीन अंकों की संख्याएँ",
+      "जोड़ और घटाव",
+      "गुणा",
+      "भाग",
+      "भिन्न और माप",
+    ],
+    English: [
+      "Parts of Speech",
+      "Simple Grammar",
+      "Paragraph Reading",
+      "Question and Answer",
+      "Creative Writing",
+    ],
+    "Environmental Studies": [
+      "पौधों का जीवन",
+      "जानवरों की विविधता",
+      "जल के स्रोत",
+      "मेरा समुदाय",
+      "पर्यावरण संरक्षण",
+    ],
+    "General Awareness": [
+      "भारत के राज्य",
+      "राष्ट्रीय प्रतीक",
+      "स्वतंत्रता दिवस",
+      "महत्वपूर्ण स्थान",
+      "स्वास्थ्य आदतें",
+    ],
+  },
+
+  4: {
+    Hindi: [
+      "सर्वनाम",
+      "विशेषण",
+      "काल",
+      "कहानी का सार",
+      "पत्र लेखन",
+    ],
+    Mathematics: [
+      "बड़ी संख्याएँ",
+      "गुणा और भाग",
+      "भिन्न",
+      "दशमलव की शुरुआत",
+      "परिमाप और क्षेत्रफल",
+    ],
+    English: [
+      "Tenses",
+      "Pronouns",
+      "Adjectives",
+      "Reading Comprehension",
+      "Paragraph Writing",
+    ],
+    "Environmental Studies": [
+      "हमारा पर्यावरण",
+      "जल संरक्षण",
+      "वन और वन्यजीव",
+      "परिवहन",
+      "कार्य और जीवन",
+    ],
+    "General Awareness": [
+      "भारत का परिचय",
+      "महान व्यक्तित्व",
+      "विज्ञान के दैनिक उपयोग",
+      "सार्वजनिक सेवाएँ",
+      "आपदा सुरक्षा",
+    ],
+  },
+
+  5: {
+    Hindi: [
+      "क्रिया",
+      "काल और वाक्य",
+      "पाठ समझ",
+      "निबंध लेखन",
+      "रचनात्मक लेखन",
+    ],
+    Mathematics: [
+      "संख्याएँ और स्थान-मूल्य",
+      "चार संक्रियाएँ",
+      "भिन्न और दशमलव",
+      "ज्यामिति",
+      "डेटा और ग्राफ",
+    ],
+    English: [
+      "Advanced Grammar",
+      "Tenses",
+      "Comprehension",
+      "Letter Writing",
+      "Creative Writing",
+    ],
+    "Environmental Studies": [
+      "प्राकृतिक संसाधन",
+      "जल और उसका संरक्षण",
+      "पौधे और कृषि",
+      "मानव शरीर",
+      "प्रदूषण और संरक्षण",
+    ],
+    "General Awareness": [
+      "भारत का संविधान",
+      "भारतीय संस्कृति",
+      "विज्ञान और तकनीक",
+      "पर्यावरण जागरूकता",
+      "स्वास्थ्य और सुरक्षा",
+    ],
+  },
+};
+
+function slug(value) {
+  return value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+}
+
+function getChapterType(subject) {
+  if (subject === "Mathematics") return "math";
+  if (subject === "Hindi") return "hindi";
+  if (subject === "English") return "english";
+  if (subject === "Environmental Studies") return "evs";
+  return "awareness";
+}
+
+export const curriculumBooks = [];
+
+for (let grade = 1; grade <= 5; grade++) {
+  for (const subject of SUBJECTS) {
+    const chapterNames = CHAPTERS[grade][subject];
+
+    SOURCE_BOOKS.forEach((bookSource) => {
+      const bookId = `class-${grade}-${slug(subject)}-${bookSource.suffix}`;
+
+      curriculumBooks.push({
+        id: bookId,
+        grade,
+        subject,
+        title: `${bookSource.label} - ${subject} - Class ${grade}`,
+        type: bookSource.type,
+        source: bookSource.source,
+        description: bookSource.description,
+        sourceUrl: bookSource.sourceUrl,
+
+        chapters: chapterNames.map((title, index) => ({
+          id: `${bookId}-chapter-${index + 1}`,
+          chapterNumber: index + 1,
+          title,
+          type: getChapterType(subject),
+
+          learningObjective:
+            `विद्यार्थी ${title} से संबंधित बुनियादी अवधारणाओं को समझ सकेंगे।`,
+
+          keywords: [
+            title,
+            subject,
+            `कक्षा ${grade}`,
+          ],
+        })),
+      });
+    });
+  }
+}
+
+export function getBooksByGradeAndSubject(grade, subject) {
+  return curriculumBooks.filter(
+    (book) =>
+      book.grade === Number(grade) &&
+      book.subject === subject
+  );
+}
+
+export function getBookById(id) {
+  return curriculumBooks.find(
+    (book) => book.id === id
+  );
+}
+
+export { SUBJECTS };

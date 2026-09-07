@@ -1,17 +1,17 @@
 import express from "express";
 
 import {
-  getCurriculum,
-  getCurriculumLesson,
-  translateCurriculum,
+  getCurriculumOptions,
+  getCurriculumBooks,
+  getBookDetails,
 } from "../controllers/curriculumController.js";
 
 const router = express.Router();
 
-router.get("/", getCurriculum);
+router.get("/options", getCurriculumOptions);
 
-router.get("/:id", getCurriculumLesson);
+router.get("/books", getCurriculumBooks);
 
-router.post("/:id/translate", translateCurriculum);
+router.get("/books/:id", getBookDetails);
 
 export default router;

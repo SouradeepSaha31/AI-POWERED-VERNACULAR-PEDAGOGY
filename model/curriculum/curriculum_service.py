@@ -43,3 +43,13 @@ def translate_curriculum(
     }
 
     return translated
+
+
+def prepare_curriculum(book):
+    return {
+        "id": book["id"],
+        "grade": book["grade"],
+        "subject": book["subject"],
+        "title": book["title"],
+        "chapters": book["chapters"],
+    }

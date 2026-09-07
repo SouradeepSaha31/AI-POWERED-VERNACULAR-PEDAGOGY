@@ -234,22 +234,39 @@ def translate_curriculum_api(
 
 
 class WorksheetRequest(BaseModel):
-    lesson: dict
-    target_language: str = "sat"
+    book: dict
+    chapter: dict
     difficulty: str = "Easy"
     num_questions: int = 5
+    target_language: str = "sat"
 
 
 @app.post("/generate-worksheet")
 def generate_worksheet_api(
     request: WorksheetRequest
 ):
+    if request.difficulty not in [
+        "Easy",
+        "Medium",
+        "Hard"
+    ]:
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid difficulty."
+        )
+
+    if not 1 <= request.num_questions <= 15:
+        raise HTTPException(
+            status_code=400,
+            detail="Number of questions must be between 1 and 15."
+        )
 
     worksheet = generate_worksheet(
-        request.lesson,
-        request.target_language,
-        request.difficulty,
-        request.num_questions
+        book=request.book,
+        chapter=request.chapter,
+        difficulty=request.difficulty,
+        num_questions=request.num_questions,
+        target_language=request.target_language,
     )
 
     return {
@@ -258,8 +275,8 @@ def generate_worksheet_api(
     }
 
 
-
 class FlashcardRequest(BaseModel):
+    items: list
     topic: str
     target_language: str = "sat"
     count: int = 6
@@ -269,17 +286,27 @@ class FlashcardRequest(BaseModel):
 def generate_flashcards_api(
     request: FlashcardRequest
 ):
+    if not request.items:
+        raise HTTPException(
+            status_code=400,
+            detail="Flashcard items are required."
+        )
 
-    cards = generate_flashcards(
-        request.topic,
-        request.target_language,
-        request.count
+    if request.count < 1 or request.count > 12:
+        raise HTTPException(
+            status_code=400,
+            detail="Count must be between 1 and 12."
+        )
+    print(request, flush = True)
+    result = generate_flashcards(
+        items=request.items,
+        topic=request.topic,
+        target_language=request.target_language,
+        count=request.count,
     )
 
     return {
         "success": True,
-        "data": cards
+        "data": result,
     }
-
-
 

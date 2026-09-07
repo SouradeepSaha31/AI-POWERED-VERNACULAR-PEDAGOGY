@@ -1,75 +1,111 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:5000/api",
+  baseURL: "http://localhost:3000/api",
   headers: {
     "Content-Type": "application/json",
   },
 });
 
-export async function getCurriculum(id) {
+export async function getCurriculumOptions() {
   try {
     const response = await API.get(
-      id ? `/curriculum/${id}` : "/curriculum"
+      "/curriculum/options"
     );
 
     return response.data;
+
   } catch (error) {
-    console.error("Curriculum API Error:", error);
+    console.error(
+      "Curriculum Options Error:",
+      error
+    );
 
     return {
       success: false,
-      error: "Unable to connect to server",
+      error: "Unable to load curriculum options",
     };
   }
 }
 
-export async function postWorksheet({
-  lessonId,
-  targetLanguage,
-  difficulty,
-  numQuestions,
+
+export async function getCurriculumBooks({
+  grade,
+  subject,
 }) {
   try {
-    const response = await API.post("/worksheet", {
-      lessonId,
-      targetLanguage,
-      difficulty,
-      numQuestions,
-    });
-
-    return response.data;
-  } catch (error) {
-    console.error("Worksheet API Error:", error);
-
-    return {
-      success: false,
-      error: "Worksheet server unavailable",
-    };
-  }
-}
-
-export async function postFlashcards({
-  topic,
-  targetLanguage,
-  count,
-}) {
-  try {
-    const response = await API.post(
-      "/flashcards",
+    const response = await API.get(
+      "/curriculum/books",
       {
-        topic,
-        targetLanguage,
-        count,
+        params: {
+          grade,
+          subject,
+        },
       }
     );
 
     return response.data;
 
   } catch (error) {
-
     console.error(
-      "Flashcard API Error:",
+      "Curriculum Books Error:",
+      error
+    );
+
+    return {
+      success: false,
+      error: "Unable to load books",
+    };
+  }
+}
+
+
+export async function getBook(bookId) {
+  try {
+    const response = await API.get(
+      `/curriculum/books/${bookId}`
+    );
+
+    return response.data;
+
+  } catch (error) {
+    console.error(
+      "Book Details Error:",
+      error
+    );
+
+    return {
+      success: false,
+      error: "Unable to load book",
+    };
+  }
+}
+
+
+export async function postWorksheet({
+  bookId,
+  chapterId,
+  targetLanguage = "sat",
+  difficulty = "Easy",
+  numQuestions = 5,
+}) {
+  try {
+    const response = await API.post(
+      "/worksheet",
+      {
+        bookId,
+        chapterId,
+        targetLanguage,
+        difficulty,
+        numQuestions,
+      }
+    );
+
+    return response.data;
+
+  } catch (error) {
+    console.error(
+      "Worksheet API Error:",
       error
     );
 
@@ -77,7 +113,68 @@ export async function postFlashcards({
       success: false,
       error:
         error.response?.data?.error ||
-        "Flashcard server unavailable",
+        "Worksheet server unavailable",
+    };
+  }
+}
+
+export async function getFlashcardTopics() {
+  try {
+    const response = await API.get(
+      "/flashcards/topics"
+    );
+    // console.log(response.data)
+
+    return response.data;
+
+  } catch (error) {
+
+    console.error(
+      "Flashcard Topics Error:",
+      error
+    );
+
+    return {
+      success: false,
+      error:
+        error.response?.data?.error ||
+        "Unable to load flashcard topics.",
+    };
+  }
+}
+
+
+export async function postFlashcards({
+  topic,
+  targetLanguage = "sat",
+  count = 6,
+}) {
+  try {
+    console.log(topic, targetLanguage, count)
+
+    const response = await API.post( "/flashcards",
+      {
+        topic,
+        targetLanguage,
+        count,
+      }
+    );
+    // console.log(response.data)
+
+    return response.data;
+
+  } catch (error) {
+
+    console.error(
+      "Flashcard API Error:",
+      error.response?.data || error
+    );
+
+    return {
+      success: false,
+      error:
+        error.response?.data?.error ||
+        "Flashcard generation failed.",
     };
   }
 }
