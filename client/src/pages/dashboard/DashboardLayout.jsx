@@ -6,6 +6,7 @@ import {
   LayoutDashboard,
   Image as ImageIcon,
   WifiOff,
+  LibraryBig,
 } from "lucide-react";
 
 export default function DashboardLayout() {
@@ -25,13 +26,24 @@ export default function DashboardLayout() {
         <nav className="flex-1 overflow-y-auto py-4">
           <ul className="space-y-1 px-3">
             <li>
-              <NavLink to="/dashboard" end className={({isActive}) => `flex items-center gap-3 px-3 py-2 rounded-md text-slate-700 hover:bg-blue-100 font-medium ${isActive ? "bg-blue-100" : ""}`}>
+              <NavLink
+                to="/dashboard"
+                end
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-3 py-2 rounded-md text-slate-700 hover:bg-blue-100 font-medium ${isActive ? "bg-blue-100" : ""}`
+                }
+              >
                 <LayoutDashboard className="w-5 h-5 text-slate-500" />
                 Dashboard
               </NavLink>
             </li>
             <li>
-              <NavLink to="/dashboard/translate" className={({isActive}) => `flex items-center gap-3 px-3 py-2 rounded-md text-slate-700 hover:bg-blue-100 font-medium ${isActive ? "bg-blue-100" : ""}`}>
+              <NavLink
+                to="/dashboard/translate"
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-3 py-2 rounded-md text-slate-700 hover:bg-blue-100 font-medium ${isActive ? "bg-blue-100" : ""}`
+                }
+              >
                 <Languages className="w-5 h-5 text-slate-500" />
                 Language Translator
               </NavLink>
@@ -43,19 +55,34 @@ export default function DashboardLayout() {
               </NavLink>
             </li> */}
             <li>
-              <NavLink to="/dashboard/curriculum" className={({isActive}) => `flex items-center gap-3 px-3 py-2 rounded-md text-slate-700 hover:bg-blue-100 font-medium ${isActive ? "bg-blue-100" : ""}`}>
+              <NavLink
+                to="/dashboard/curriculum"
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-3 py-2 rounded-md text-slate-700 hover:bg-blue-100 font-medium ${isActive ? "bg-blue-100" : ""}`
+                }
+              >
                 <BookOpen className="w-5 h-5 text-slate-500" />
                 Curriculum
               </NavLink>
             </li>
             <li>
-              <NavLink to="/dashboard/worksheets" className={({isActive}) => `flex items-center gap-3 px-3 py-2 rounded-md text-slate-700 hover:bg-blue-100 font-medium ${isActive ? "bg-blue-100" : ""}`}>
+              <NavLink
+                to="/dashboard/worksheets"
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-3 py-2 rounded-md text-slate-700 hover:bg-blue-100 font-medium ${isActive ? "bg-blue-100" : ""}`
+                }
+              >
                 <FileText className="w-5 h-5 text-slate-500" />
                 Worksheets
               </NavLink>
             </li>
             <li>
-              <NavLink to="/dashboard/flashcards" className={({isActive}) => `flex items-center gap-3 px-3 py-2 rounded-md text-slate-700 hover:bg-blue-100 font-medium ${isActive ? "bg-blue-100" : ""}`}>
+              <NavLink
+                to="/dashboard/flashcards"
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-3 py-2 rounded-md text-slate-700 hover:bg-blue-100 font-medium ${isActive ? "bg-blue-100" : ""}`
+                }
+              >
                 <ImageIcon className="w-5 h-5 text-slate-500" />
                 Flashcards
               </NavLink>
@@ -64,7 +91,25 @@ export default function DashboardLayout() {
               <div className="px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider">Library</div>
             </li> */}
             <li>
-              <NavLink to="/dashboard/offline" className={({isActive}) => `flex items-center gap-3 px-3 py-2 rounded-md text-slate-700 hover:bg-blue-100 font-medium ${isActive ? "bg-blue-100" : ""}`}>
+              <NavLink
+                to="/dashboard/library"
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-3 py-2 rounded-md text-slate-700 hover:bg-blue-100 font-medium ${
+                    isActive ? "bg-blue-100" : ""
+                  }`
+                }
+              >
+                <LibraryBig className="w-5 h-5 text-slate-500" />
+                My Library
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/dashboard/offline"
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-3 py-2 rounded-md text-slate-700 hover:bg-blue-100 font-medium ${isActive ? "bg-blue-100" : ""}`
+                }
+              >
                 <WifiOff className="w-5 h-5 text-slate-500" />
                 Offline Readiness
               </NavLink>
@@ -78,9 +123,12 @@ export default function DashboardLayout() {
               T
             </div>
             <div>
-              <p className="text-sm font-medium text-slate-900">Teacher Profile</p>
+              <p className="text-sm font-medium text-slate-900">
+                Teacher Profile
+              </p>
               <p className="text-xs text-emerald-600 font-medium flex items-center gap-1">
-                <span className="w-2 h-2 rounded-full bg-emerald-500"></span> Online
+                <span className="w-2 h-2 rounded-full bg-emerald-500"></span>{" "}
+                Online
               </p>
             </div>
           </div>

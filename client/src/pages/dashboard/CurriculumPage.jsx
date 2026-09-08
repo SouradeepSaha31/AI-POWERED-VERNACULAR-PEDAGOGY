@@ -1,76 +1,3 @@
-// import { useEffect, useState } from "react";
-// import { Link } from "react-router-dom";
-// import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-// import { Button } from "@/components/ui/button";
-// import { getCurriculum } from "@/lib/api";
-
-// export default function CurriculumPage() {
-//   const [lessons, setLessons] = useState([]);
-//   const [loading, setLoading] = useState(true);
-
-//   useEffect(() => {
-//     getCurriculum().then((data) => {
-//       if (data.success) {
-//         setLessons(data.data);
-//       }
-//       setLoading(false);
-//     });
-//   }, []);
-
-//   return (
-//     <div className="p-8 max-w-6xl mx-auto space-y-8">
-//       <div>
-//         <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Curriculum Library</h1>
-//         <p className="text-slate-500 mt-1">Browse NIPUN Bharat aligned standard curriculum lessons</p>
-//       </div>
-
-//       {loading ? (
-//         <div className="flex justify-center p-12"><div className="animate-spin w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full"></div></div>
-//       ) : (
-//         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-//           {lessons.map((lesson) => (
-//             <Card key={lesson.id} className="flex flex-col">
-//               <CardHeader>
-//                 <div className="flex justify-between items-start mb-2">
-//                   <span className="text-xs font-semibold px-2 py-1 bg-slate-100 text-slate-600 rounded">Grade {lesson.grade}</span>
-//                   <span className="text-xs font-semibold px-2 py-1 bg-emerald-50 text-emerald-600 rounded">NIPUN Aligned</span>
-//                 </div>
-//                 <CardTitle>{lesson.title}</CardTitle>
-//                 <CardDescription>{lesson.subject} - {lesson.topic}</CardDescription>
-//               </CardHeader>
-//               <CardContent className="flex-1 flex flex-col justify-between">
-//                 <div className="mb-4 text-sm text-slate-600">
-//                   <span className="font-semibold text-slate-900">Outcome:</span> {lesson.learningObjective}
-//                 </div>
-
-//                 <div className="space-y-2 mt-4 pt-4 border-t border-slate-100">
-//                   <p className="text-xs text-slate-500 font-medium">Available Languages:</p>
-//                   <div className="flex gap-2">
-//                     <span className="text-xs px-2 py-1 bg-slate-100 rounded text-slate-600">✓ Hindi</span>
-//                     <span className="text-xs px-2 py-1 bg-emerald-100 rounded text-emerald-700">✓ Santhali</span>
-//                   </div>
-//                 </div>
-
-//                 <div className="mt-6 flex gap-2">
-//                   <Link to={`/dashboard/translate?lessonId=${lesson.id}`} className="flex-1">
-//                     <Button variant="outline" className="w-full">Translate</Button>
-//                   </Link>
-//                   <Link to={`/dashboard/worksheets?lessonId=${lesson.id}`} className="flex-1">
-//                     <Button className="w-full bg-emerald-600 hover:bg-emerald-700">Worksheet</Button>
-//                   </Link>
-//                 </div>
-//               </CardContent>
-//             </Card>
-//           ))}
-//         </div>
-//       )}
-//     </div>
-//   );
-// }
-
-
-
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -84,10 +11,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 
-import {
-  getCurriculumBooks,
-  getBook
-} from "@/lib/api";
+import { getCurriculumBooks, getBook } from "@/lib/api";
 
 export default function CurriculumPage() {
   const [grade, setGrade] = useState(1);
@@ -126,31 +50,27 @@ export default function CurriculumPage() {
   };
 
   const handleViewOutcomes = async (bookId) => {
-  setError("");
+    setError("");
 
-  const result = await getBook(bookId);
+    const result = await getBook(bookId);
 
-  if (result.success) {
-    setSelectedBook(result.data);
-    setShowOutcomes(true);
-  } else {
-    setError(
-      result.error || "Unable to load learning outcomes."
-    );
-  }
-};
+    if (result.success) {
+      setSelectedBook(result.data);
+      setShowOutcomes(true);
+    } else {
+      setError(result.error || "Unable to load learning outcomes.");
+    }
+  };
 
   return (
     <div className="p-8 max-w-6xl mx-auto space-y-8">
-
       <div>
         <h1 className="text-3xl font-bold text-slate-900">
           Curriculum Library
         </h1>
 
         <p className="text-slate-500 mt-1">
-          Select class and subject to explore
-          curriculum resources
+          Select class and subject to explore curriculum resources
         </p>
       </div>
 
@@ -158,53 +78,33 @@ export default function CurriculumPage() {
 
       <Card>
         <CardContent className="p-6">
-
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
-
             <div>
-              <label className="text-sm font-medium">
-                Class
-              </label>
+              <label className="text-sm font-medium">Class</label>
 
               <select
                 value={grade}
-                onChange={(e) =>
-                  setGrade(
-                    Number(e.target.value)
-                  )
-                }
+                onChange={(e) => setGrade(Number(e.target.value))}
                 className="w-full mt-2 h-10 border rounded-md px-3"
               >
-                {[1, 2, 3, 4, 5].map(
-                  (item) => (
-                    <option
-                      key={item}
-                      value={item}
-                    >
-                      Class {item}
-                    </option>
-                  )
-                )}
+                {[1, 2, 3, 4, 5].map((item) => (
+                  <option key={item} value={item}>
+                    Class {item}
+                  </option>
+                ))}
               </select>
             </div>
 
             <div>
-              <label className="text-sm font-medium">
-                Subject
-              </label>
+              <label className="text-sm font-medium">Subject</label>
 
               <select
                 value={subject}
-                onChange={(e) =>
-                  setSubject(e.target.value)
-                }
+                onChange={(e) => setSubject(e.target.value)}
                 className="w-full mt-2 h-10 border rounded-md px-3"
               >
                 {subjects.map((item) => (
-                  <option
-                    key={item}
-                    value={item}
-                  >
+                  <option key={item} value={item}>
                     {item}
                   </option>
                 ))}
@@ -216,21 +116,13 @@ export default function CurriculumPage() {
               disabled={loading}
               className="bg-emerald-600 hover:bg-emerald-700"
             >
-              {loading
-                ? "Loading..."
-                : "Go"}
+              {loading ? "Loading..." : "Go"}
             </Button>
-
           </div>
-
         </CardContent>
       </Card>
 
-      {error && (
-        <div className="text-red-500">
-          {error}
-        </div>
-      )}
+      {error && <div className="text-red-500">{error}</div>}
 
       {/* Book cards */}
 
@@ -241,18 +133,10 @@ export default function CurriculumPage() {
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-
             {books.map((book) => (
-
-              <Card
-                key={book.id}
-                className="flex flex-col "
-              >
-
+              <Card key={book.id} className="flex flex-col ">
                 <CardHeader>
-
                   <div className="flex justify-between">
-
                     <span className="text-xs px-2 py-1 bg-slate-100 rounded">
                       Class {book.grade}
                     </span>
@@ -260,21 +144,14 @@ export default function CurriculumPage() {
                     <span className="text-xs px-2 py-1 bg-emerald-50 text-emerald-600 rounded">
                       NIPUN / FLN
                     </span>
-
                   </div>
 
-                  <CardTitle className="mt-3">
-                    {book.title}
-                  </CardTitle>
+                  <CardTitle className="mt-3">{book.title}</CardTitle>
 
-                  <CardDescription>
-                    {book.subject}
-                  </CardDescription>
-
+                  <CardDescription>{book.subject}</CardDescription>
                 </CardHeader>
 
                 <CardContent className="flex-1">
-
                   <p className="text-sm text-slate-600 mb-4">
                     {book.description}
                   </p>
@@ -284,17 +161,13 @@ export default function CurriculumPage() {
                   </div>
 
                   <div className="flex gap-2 flex-wrap">
-
                     <a
                       href={book.sourceUrl}
                       target="_blank"
                       rel="noreferrer"
                       className="flex-1"
                     >
-                      <Button
-                        variant="outline"
-                        className="w-full"
-                      >
+                      <Button variant="outline" className="w-full">
                         Source
                       </Button>
                     </a>
@@ -311,21 +184,14 @@ export default function CurriculumPage() {
                     <Button
                       variant="outline"
                       className="w-full"
-                      onClick={() =>
-                        handleViewOutcomes(book.id)
-                      }
+                      onClick={() => handleViewOutcomes(book.id)}
                     >
                       📘 Learning Outcomes
                     </Button>
-
                   </div>
-
                 </CardContent>
-
               </Card>
-
             ))}
-
           </div>
         </div>
       )}
@@ -333,117 +199,77 @@ export default function CurriculumPage() {
       {/* learning outcomes */}
 
       {showOutcomes && selectedBook && (
-  <Card className="mt-8 border-emerald-200">
+        <Card className="mt-8 border-emerald-200">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle>Learning Outcomes</CardTitle>
 
-    <CardHeader>
+                <p className="text-sm text-slate-500 mt-1">
+                  {selectedBook.title}
+                </p>
 
-      <div className="flex items-center justify-between">
-
-        <div>
-          <CardTitle>
-            Learning Outcomes
-          </CardTitle>
-
-          <p className="text-sm text-slate-500 mt-1">
-            {selectedBook.title}
-          </p>
-
-          <p className="text-sm text-slate-500">
-            Class {selectedBook.grade} •{" "}
-            {selectedBook.subject}
-          </p>
-        </div>
-
-        <Button
-          variant="outline"
-          onClick={() => {
-            setShowOutcomes(false);
-            setSelectedBook(null);
-          }}
-        >
-          Close
-        </Button>
-
-      </div>
-
-    </CardHeader>
-
-    <CardContent>
-
-      <div className="space-y-6">
-
-        {selectedBook.chapters?.map(
-          (chapter) => (
-
-            <div
-              key={chapter.id}
-              className="border rounded-lg p-5 bg-slate-50"
-            >
-
-              <div className="flex items-center gap-3 mb-3">
-
-                <span className="text-xs font-semibold bg-emerald-100 text-emerald-700 px-2 py-1 rounded">
-                  Chapter {chapter.chapterNumber}
-                </span>
-
-                <h3 className="font-bold text-slate-900">
-                  {chapter.title}
-                </h3>
-
+                <p className="text-sm text-slate-500">
+                  Class {selectedBook.grade} • {selectedBook.subject}
+                </p>
               </div>
 
-
-              <p className="text-sm text-slate-600 mb-4">
-                <strong>
-                  Learning Objective:
-                </strong>{" "}
-                {chapter.learningObjective}
-              </p>
-
-
-              <p className="text-sm font-semibold text-slate-800 mb-2">
-                Expected Learning Outcomes
-              </p>
-
-              <div className="space-y-2">
-
-                {(
-                  chapter.learningOutcomes || []
-                ).map(
-                  (outcome, index) => (
-
-                    <div
-                      key={index}
-                      className="flex gap-2 text-sm text-slate-600"
-                    >
-
-                      <span className="text-emerald-600 font-bold">
-                        ✓
-                      </span>
-
-                      <span>
-                        {outcome}
-                      </span>
-
-                    </div>
-
-                  )
-                )}
-
-              </div>
-
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setShowOutcomes(false);
+                  setSelectedBook(null);
+                }}
+              >
+                Close
+              </Button>
             </div>
+          </CardHeader>
 
-          )
-        )}
+          <CardContent>
+            <div className="space-y-6">
+              {selectedBook.chapters?.map((chapter) => (
+                <div
+                  key={chapter.id}
+                  className="border rounded-lg p-5 bg-slate-50"
+                >
+                  <div className="flex items-center gap-3 mb-3">
+                    <span className="text-xs font-semibold bg-emerald-100 text-emerald-700 px-2 py-1 rounded">
+                      Chapter {chapter.chapterNumber}
+                    </span>
 
-      </div>
+                    <h3 className="font-bold text-slate-900">
+                      {chapter.title}
+                    </h3>
+                  </div>
 
-    </CardContent>
+                  <p className="text-sm text-slate-600 mb-4">
+                    <strong>Learning Objective:</strong>{" "}
+                    {chapter.learningObjective}
+                  </p>
 
-  </Card>
-)}
+                  <p className="text-sm font-semibold text-slate-800 mb-2">
+                    Expected Learning Outcomes
+                  </p>
 
+                  <div className="space-y-2">
+                    {(chapter.learningOutcomes || []).map((outcome, index) => (
+                      <div
+                        key={index}
+                        className="flex gap-2 text-sm text-slate-600"
+                      >
+                        <span className="text-emerald-600 font-bold">✓</span>
+
+                        <span>{outcome}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }

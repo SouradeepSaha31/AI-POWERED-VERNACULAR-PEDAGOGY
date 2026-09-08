@@ -22,8 +22,11 @@ export const aiService = {
       lesson_title: "[Demo] 1 ᱠᱷᱚᱱ 10 ᱫᱷᱟᱹᱵᱤᱡ ᱮᱞᱠᱷᱟ ᱪᱮᱫᱚᱜ",
       learning_objective:
         "[Demo] ᱜᱤᱫᱽᱨᱟᱹ ᱠᱚ 1 ᱠᱷᱚᱱ 10 ᱫᱷᱟᱹᱵᱤᱡ ᱮᱞᱠᱷᱟ ᱠᱚ ᱩᱨᱩᱢ ᱟᱨ ᱠᱚ ᱞᱮᱠᱷᱟ ᱫᱟᱲᱮᱭᱟᱜᱼᱟ᱾",
-      teacher_script: "[Demo] ᱛᱮᱦᱮᱧ ᱵᱚᱱ ᱪᱮᱫᱚᱜᱼᱟ ᱢᱤᱫ ᱠᱷᱚᱱ ᱜᱮᱞ ᱫᱷᱟᱹᱵᱤᱡ ᱪᱮᱠᱟ ᱠᱚ ᱞᱮᱠᱷᱟᱭᱟ᱾",
-      activities: ["[Demo] ᱜᱤᱫᱽᱨᱟᱹ ᱠᱚ ᱠᱞᱟᱥᱨᱩᱢ ᱨᱮᱱᱟᱜ ᱜᱮᱞ ᱜᱚᱴᱟᱝ ᱡᱤᱱᱤᱥ ᱞᱮᱠᱷᱟ ᱦᱚᱪᱚ ᱠᱚᱢ᱾"],
+      teacher_script:
+        "[Demo] ᱛᱮᱦᱮᱧ ᱵᱚᱱ ᱪᱮᱫᱚᱜᱼᱟ ᱢᱤᱫ ᱠᱷᱚᱱ ᱜᱮᱞ ᱫᱷᱟᱹᱵᱤᱡ ᱪᱮᱠᱟ ᱠᱚ ᱞᱮᱠᱷᱟᱭᱟ᱾",
+      activities: [
+        "[Demo] ᱜᱤᱫᱽᱨᱟᱹ ᱠᱚ ᱠᱞᱟᱥᱨᱩᱢ ᱨᱮᱱᱟᱜ ᱜᱮᱞ ᱜᱚᱴᱟᱝ ᱡᱤᱱᱤᱥ ᱞᱮᱠᱷᱟ ᱦᱚᱪᱚ ᱠᱚᱢ᱾",
+      ],
       assessment: ["[Demo] ᱢᱚᱬᱮ ᱜᱚᱴᱟᱝ ᱡᱤᱱᱤᱥ ᱩᱫᱩᱜ ᱠᱟᱛᱮ ᱜᱤᱫᱽᱨᱟᱹ ᱞᱮᱠᱷᱟ ᱦᱚᱪᱚᱭᱮᱢ᱾"],
     };
   },
@@ -32,7 +35,10 @@ export const aiService = {
     await delay(1500);
     return {
       title: "[Demo] Numbers 1-10",
-      instructions: { hi: "वस्तुओं की गिनती करें।", target: "[Demo] ᱡᱤᱱᱤᱥ ᱠᱚ ᱞᱮᱠᱷᱟᱭ ᱢᱮ᱾" },
+      instructions: {
+        hi: "वस्तुओं की गिनती करें।",
+        target: "[Demo] ᱡᱤᱱᱤᱥ ᱠᱚ ᱞᱮᱠᱷᱟᱭ ᱢᱮ᱾",
+      },
       questions: Array.from({ length: numQuestions }).map((_, i) => ({
         q_hi: `कितने सेब हैं? (${i + 1})`,
         q_target: `[Demo] ᱛᱤᱱᱟᱹᱜ ᱥᱮᱣ ᱢᱮᱱᱟᱜᱼᱟ? (${i + 1})`,

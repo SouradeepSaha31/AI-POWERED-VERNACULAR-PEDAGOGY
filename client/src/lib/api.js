@@ -1,4 +1,5 @@
 import axios from "axios";
+import { saveCache, getCache } from "./offline";
 
 const API = axios.create({
   baseURL: "http://localhost:3000/api",
@@ -9,17 +10,11 @@ const API = axios.create({
 
 export async function getCurriculumOptions() {
   try {
-    const response = await API.get(
-      "/curriculum/options"
-    );
+    const response = await API.get("/curriculum/options");
 
     return response.data;
-
   } catch (error) {
-    console.error(
-      "Curriculum Options Error:",
-      error
-    );
+    console.error("Curriculum Options Error:", error);
 
     return {
       success: false,
@@ -28,59 +23,60 @@ export async function getCurriculumOptions() {
   }
 }
 
+export async function getCurriculumBooks({ grade, subject }) {
+  const cacheKey = `curriculum-books-${grade}-${subject}`;
 
-export async function getCurriculumBooks({
-  grade,
-  subject,
-}) {
   try {
-    const response = await API.get(
-      "/curriculum/books",
-      {
-        params: {
-          grade,
-          subject,
-        },
-      }
-    );
+    const response = await API.get("/curriculum/books", {
+      params: {
+        grade,
+        subject,
+      },
+    });
+
+    saveCache(cacheKey, response.data);
 
     return response.data;
-
   } catch (error) {
-    console.error(
-      "Curriculum Books Error:",
-      error
-    );
+    console.error("Curriculum Books Error:", error);
+
+    const cached = getCache(cacheKey);
+
+    if (cached) {
+      return cached;
+    }
 
     return {
       success: false,
-      error: "Unable to load books",
+      error: "Unable to load books. No offline copy is available.",
     };
   }
 }
-
 
 export async function getBook(bookId) {
+  const cacheKey = `book-${bookId}`;
+
   try {
-    const response = await API.get(
-      `/curriculum/books/${bookId}`
-    );
+    const response = await API.get(`/curriculum/books/${bookId}`);
+
+    saveCache(cacheKey, response.data);
 
     return response.data;
-
   } catch (error) {
-    console.error(
-      "Book Details Error:",
-      error
-    );
+    console.error("Book Details Error:", error);
+
+    const cached = getCache(cacheKey);
+
+    if (cached) {
+      return cached;
+    }
 
     return {
       success: false,
-      error: "Unable to load book",
+      error: "Unable to load book. No offline copy is available.",
     };
   }
 }
-
 
 export async function postWorksheet({
   bookId,
@@ -90,59 +86,40 @@ export async function postWorksheet({
   numQuestions = 5,
 }) {
   try {
-    const response = await API.post(
-      "/worksheet",
-      {
-        bookId,
-        chapterId,
-        targetLanguage,
-        difficulty,
-        numQuestions,
-      }
-    );
+    const response = await API.post("/worksheet", {
+      bookId,
+      chapterId,
+      targetLanguage,
+      difficulty,
+      numQuestions,
+    });
 
     return response.data;
-
   } catch (error) {
-    console.error(
-      "Worksheet API Error:",
-      error
-    );
+    console.error("Worksheet API Error:", error);
 
     return {
       success: false,
-      error:
-        error.response?.data?.error ||
-        "Worksheet server unavailable",
+      error: error.response?.data?.error || "Worksheet server unavailable",
     };
   }
 }
 
 export async function getFlashcardTopics() {
   try {
-    const response = await API.get(
-      "/flashcards/topics"
-    );
+    const response = await API.get("/flashcards/topics");
     // console.log(response.data)
 
     return response.data;
-
   } catch (error) {
-
-    console.error(
-      "Flashcard Topics Error:",
-      error
-    );
+    console.error("Flashcard Topics Error:", error);
 
     return {
       success: false,
-      error:
-        error.response?.data?.error ||
-        "Unable to load flashcard topics.",
+      error: error.response?.data?.error || "Unable to load flashcard topics.",
     };
   }
 }
-
 
 export async function postFlashcards({
   topic,
@@ -150,31 +127,22 @@ export async function postFlashcards({
   count = 6,
 }) {
   try {
-    console.log(topic, targetLanguage, count)
+    console.log(topic, targetLanguage, count);
 
-    const response = await API.post( "/flashcards",
-      {
-        topic,
-        targetLanguage,
-        count,
-      }
-    );
+    const response = await API.post("/flashcards", {
+      topic,
+      targetLanguage,
+      count,
+    });
     // console.log(response.data)
 
     return response.data;
-
   } catch (error) {
-
-    console.error(
-      "Flashcard API Error:",
-      error.response?.data || error
-    );
+    console.error("Flashcard API Error:", error.response?.data || error);
 
     return {
       success: false,
-      error:
-        error.response?.data?.error ||
-        "Flashcard generation failed.",
+      error: error.response?.data?.error || "Flashcard generation failed.",
     };
   }
 }
@@ -205,13 +173,13 @@ export async function postFlashcards({
 export async function translateText({
   text,
   sourceLanguage = "hi",
-  targetLanguage = "sat"
+  targetLanguage = "sat",
 }) {
   try {
     const response = await API.post("/translate", {
       text,
       sourceLanguage,
-      targetLanguage
+      targetLanguage,
     });
 
     return response.data;
@@ -220,7 +188,7 @@ export async function translateText({
 
     return {
       success: false,
-      error: error.response?.data?.error || "Translation server unavailable"
+      error: error.response?.data?.error || "Translation server unavailable",
     };
   }
 }
@@ -228,7 +196,7 @@ export async function translateText({
 export async function voiceTranslate(
   audioFile,
   sourceLanguage = "hi",
-  targetLanguage = "sat"
+  targetLanguage = "sat",
 ) {
   try {
     const formData = new FormData();
@@ -237,21 +205,16 @@ export async function voiceTranslate(
     formData.append("sourceLanguage", sourceLanguage);
     formData.append("targetLanguage", targetLanguage);
 
-    const response = await API.post(
-      "/voice",
-      formData
-    );
+    const response = await API.post("/voice", formData);
 
     return response.data;
-
   } catch (error) {
     console.error("Voice Translation Error:", error);
 
     return {
       success: false,
       error:
-        error.response?.data?.error ||
-        "Voice translation server unavailable",
+        error.response?.data?.error || "Voice translation server unavailable",
     };
   }
 }
@@ -289,13 +252,13 @@ export async function postTextToSpeech({ text, language = "hi" }) {
     const response = await API.post(
       "/voice/tts",
       { text, language },
-      { responseType: "blob" }
+      { responseType: "blob" },
     );
 
     const audioUrl = URL.createObjectURL(response.data);
     return {
       success: true,
-      audioUrl
+      audioUrl,
     };
   } catch (error) {
     console.error("Text-to-Speech Error:", error);

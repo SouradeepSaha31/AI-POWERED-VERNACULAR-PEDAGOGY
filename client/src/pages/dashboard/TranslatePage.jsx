@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -6,6 +7,7 @@ import { translateText, postTextToSpeech } from "@/lib/api";
 import { recordActivity } from "@/lib/analytics";
 import ConfidenceBadge from "@/components/ConfidenceBadge";
 import AudioMicButton from "@/components/AudioMicButton";
+import { saveToLibrary, getLibraryItem } from "@/lib/offline";
 
 export default function TranslatePage() {
   const [inputText, setInputText] = useState("बच्चों को गिनती सिखाएं");
@@ -16,11 +18,32 @@ export default function TranslatePage() {
   const [loading, setLoading] = useState(false);
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [error, setError] = useState("");
+  const [searchParams] = useSearchParams();
+
+  const libraryId = searchParams.get("libraryId");
 
   const languageNames = {
     hi: "Hindi (हिंदी)",
     sat: "Santhali (ᱥᱟᱱᱛᱟᱲᱤ)",
   };
+
+  useEffect(() => {
+    if (!libraryId) return;
+
+    const item = getLibraryItem(libraryId);
+
+    if (!item || item.type !== "translation") {
+      return;
+    }
+
+    const saved = item.content;
+
+    setInputText(saved.sourceText || "");
+
+    setTranslatedText(saved.translatedText || "");
+
+    setConfidence(saved.confidence ?? null);
+  }, [libraryId]);
 
   // Swap languages bidirectionally (Hindi <-> Santali)
   const handleSwapLanguages = () => {
@@ -63,7 +86,21 @@ export default function TranslatePage() {
           details: `${sourceLang.toUpperCase()} → ${targetLang.toUpperCase()}`,
         });
 
+        saveToLibrary({
+          type: "translation",
 
+          title: "Language Translation",
+
+          subtitle: `${sourceLang.toUpperCase()} → ${targetLang.toUpperCase()}`,
+
+          content: {
+            sourceText: inputText,
+            translatedText: result.translated_text,
+            confidence: result.confidence,
+            sourceLanguage: sourceLang,
+            targetLanguage: targetLang,
+          },
+        });
       } else {
         setError(result.error || "Translation failed");
       }
@@ -88,7 +125,9 @@ export default function TranslatePage() {
         await audio.play();
       } else {
         setIsPlayingAudio(false);
-        alert(result.error || "Audio synthesis is currently available for Hindi.");
+        alert(
+          result.error || "Audio synthesis is currently available for Hindi.",
+        );
       }
     } catch (err) {
       console.error("Audio playback error:", err);
@@ -96,13 +135,60 @@ export default function TranslatePage() {
     }
   };
 
+  const handleCopyTranslation = async () => {
+    if (!translatedText) return;
+
+    try {
+      await navigator.clipboard.writeText(translatedText);
+    } catch (error) {
+      console.error("Copy error:", error);
+    }
+  };
+
+  const handleDownloadTranslation = () => {
+    if (!translatedText) return;
+
+    const content = [
+      `Source Language: ${sourceLang}`,
+      `Target Language: ${targetLang}`,
+      "",
+      "Original Text:",
+      inputText,
+      "",
+      "Translation:",
+      translatedText,
+      "",
+      `Confidence: ${
+        confidence != null ? Math.round(confidence * 100) : "N/A"
+      }%`,
+    ].join("\n");
+
+    const blob = new Blob([content], {
+      type: "text/plain;charset=utf-8",
+    });
+
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+
+    link.href = url;
+
+    link.download = `translation-${Date.now()}.txt`;
+
+    link.click();
+
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="p-8 max-w-8xl mx-auto space-y-6">
-
       <div className="">
-        <h1 className="text-3xl font-bold text-slate-900">Vernacular Translator</h1>
+        <h1 className="text-3xl font-bold text-slate-900">
+          Vernacular Translator
+        </h1>
         <p className="text-slate-500 mt-1">
-          Bidirectional translation between Hindi pedagogy and indigenous Santali (Ol Chiki)
+          Bidirectional translation between Hindi pedagogy and indigenous
+          Santali (Ol Chiki)
         </p>
       </div>
 
@@ -161,7 +247,9 @@ export default function TranslatePage() {
                 {/* Voice Input Button */}
                 <AudioMicButton
                   onTranscribe={(transcript) => {
-                    setInputText((prev) => (prev ? `${prev} ${transcript}` : transcript));
+                    setInputText((prev) =>
+                      prev ? `${prev} ${transcript}` : transcript,
+                    );
                   }}
                   disabled={loading}
                 />
@@ -212,7 +300,8 @@ export default function TranslatePage() {
           <CardHeader className="bg-emerald-50/80 border-b border-emerald-100 rounded-t-xl flex flex-row items-center justify-between py-3.5 px-6">
             <div className="flex items-center gap-3">
               <CardTitle className="text-emerald-900 text-lg font-semibold">
-                Translation Result ({targetLang === "sat" ? "Santali" : "Hindi"})
+                Translation Result ({targetLang === "sat" ? "Santali" : "Hindi"}
+                )
               </CardTitle>
               {/* Dynamic Confidence Score Meter */}
               <ConfidenceBadge score={confidence} />
@@ -230,6 +319,24 @@ export default function TranslatePage() {
                 {isPlayingAudio ? "🔊 Playing..." : "🔊 Listen"}
               </Button>
             )}
+
+            <div className="flex gap-2 mt-4">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleCopyTranslation}
+              >
+                📋 Copy
+              </Button>
+
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleDownloadTranslation}
+              >
+                📥 Download TXT
+              </Button>
+            </div>
           </CardHeader>
           <CardContent className="p-6">
             <p className="text-2xl font-medium text-slate-900 leading-relaxed font-sans">

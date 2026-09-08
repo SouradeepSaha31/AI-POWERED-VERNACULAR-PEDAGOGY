@@ -32,17 +32,10 @@ export function getAnalytics() {
 }
 
 function saveAnalytics(data) {
-  localStorage.setItem(
-    STORAGE_KEY,
-    JSON.stringify(data)
-  );
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
 
-export function recordActivity({
-  type,
-  title,
-  details = "",
-}) {
+export function recordActivity({ type, title, details = "" }) {
   const analytics = getAnalytics();
 
   if (type === "translation") {
@@ -69,14 +62,11 @@ export function recordActivity({
 
   analytics.recentActivities.unshift(activity);
 
-  analytics.recentActivities =
-    analytics.recentActivities.slice(0, 10);
+  analytics.recentActivities = analytics.recentActivities.slice(0, 10);
 
   saveAnalytics(analytics);
 
-  window.dispatchEvent(
-    new Event("analyticsUpdated")
-  );
+  window.dispatchEvent(new Event("analyticsUpdated"));
 
   return analytics;
 }

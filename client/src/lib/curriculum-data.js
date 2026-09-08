@@ -35,7 +35,8 @@ export const curriculumLessons = [
     subject: "Language",
     topic: "Basic Shapes",
     title: "Recognizing Shapes",
-    learningObjective: "Students will identify circles, squares, and triangles.",
+    learningObjective:
+      "Students will identify circles, squares, and triangles.",
     content: JSON.stringify({
       teacherScript: "This is a circle. It is round like the sun.",
       activity: "Draw a circle in the air with your finger.",
@@ -49,7 +50,8 @@ export const curriculumLessons = [
     subject: "Language",
     topic: "Alphabet Recognition",
     title: "Letters A to E",
-    learningObjective: "Students will recognize the first five letters of the alphabet.",
+    learningObjective:
+      "Students will recognize the first five letters of the alphabet.",
     content: JSON.stringify({
       teacherScript: "Let us say the letters: A, B, C, D, E.",
       activity: "Sing the alphabet song.",
